@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/shinjewon/StudioProjects/Sherpa/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-night-v8/values-night-v8.xml",
+            "outputFile": "/Users/shinjewon/StudioProjects/2022_2_CapStone/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/Users/shinjewon/StudioProjects/Sherpa/android/app/src/main/res/values-night/styles.xml",
+                    "source": "/Users/shinjewon/StudioProjects/2022_2_CapStone/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
