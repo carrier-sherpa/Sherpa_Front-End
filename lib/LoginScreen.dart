@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -5,7 +7,8 @@ import 'MainScreen_Traveler.dart';
 import 'style.dart';
 import 'main.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
 class MyLoginPage extends StatefulWidget {
@@ -29,6 +32,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 }
 
 class LoginForm extends StatefulWidget {
+
   const LoginForm({Key? key}) : super(key: key);
 
   @override
@@ -37,6 +41,70 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  static const rootUrl = "http://localhost:5000/members";
+  String email = "";
+  String password = "";
+  String userInfo = "";
+
+  static final storage = FlutterSecureStorage();
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  Future<bool> _signupRequest() async {
+    email = emailController.text;
+    password = passwordController.text;
+
+    final url = Uri.parse("$rootUrl/signup");
+
+    http.Response response = await http.post(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+      },
+      body:
+        jsonEncode({
+            'email': email,
+            'password': password
+        })
+      ,
+    );
+
+    if(response.statusCode == 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Future<bool> _signinRequest() async {
+    email = emailController.text;
+    password = passwordController.text;
+
+    final url = Uri.parse("$rootUrl/signin");
+
+    http.Response response = await http.post(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+      },
+      body:
+      jsonEncode({
+        'email': email,
+        'password': password
+      })
+      ,
+    );
+
+    if(response.statusCode == 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +165,7 @@ class _LoginFormState extends State<LoginForm> {
               height: 100.h,
             ),
             TextFormField(
+              controller: emailController,
               decoration: const InputDecoration(
                 labelText: '아이디',
               ),
@@ -111,6 +180,7 @@ class _LoginFormState extends State<LoginForm> {
               height: 20.h,
             ),
             TextFormField(
+              controller: passwordController,
               decoration: const InputDecoration(
                 labelText: '비밀번호',
               ),
@@ -217,11 +287,32 @@ class _LoginFormState extends State<LoginForm> {
             ),
             FloatingActionButton.extended(
               backgroundColor: SherpaColor.sherpa_main,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                );//로그인 돼서 메인화면으로 넘어가는 기능 추가하는 중
+              onPressed: () async {
+                bool response = await _signupRequest();
+
+                if(response){
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
+                  );//로그인 돼서 메인화면으로 넘어가는 기능 추가하는 중
+                } else {
+
+                }
+
+                // await storage.write(
+                //     key: "login",
+                //     value: "id " +
+                //         emailController.text.toString() +
+                //         " " +
+                //         "password " +
+                //         passwordController.text.toString());
+
+                // postRequest();
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
+                // );//로그인 돼서 메인화면으로 넘어가는 기능 추가하는 중
               },
               label: Text('로그인하기',
                 style: TextStyle(
