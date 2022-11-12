@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,10 +21,33 @@ class MainScreen_Traveler extends StatefulWidget {
 class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
 
+  // 애플리케이션에서 지도를 이동하기 위한 컨트롤러
+  late GoogleMapController _controller;
+
+  // 이 값은 지도가 시작될 때 첫 번째 위치입니다.
+  final CameraPosition _initialPosition =
+  CameraPosition(target: LatLng(41.017901, 28.847953));
+
+  Future<Position> getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition();
+
+    return position;
+  }
+
+  // 지도 클릭 시 표시할 장소에 대한 마커 목록
+  final List<Marker> markers = [];
+
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.5031798, 126.9572013),
     zoom: 14.4746,
   );
+  //
+  // Future<Position> getCurrentLocation() async {
+  //   Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+  //
+  //   return position;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +127,11 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
               color: SherpaColor.sherpa_main,
               child: GoogleMap(
                 mapType: MapType.normal,
+                onMapCreated: (controller) {
+                  setState(() {
+                    _controller = controller;
+                  });
+                },
                 initialCameraPosition: _kGooglePlex,
               ),
             ),
@@ -248,9 +278,36 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                         ],
                       ),
                     ),
+                    FloatingActionButton(
+                      onPressed: () async {
+                        LocationPermission permission = await Geolocator.requestPermission();
+                        var gps = await getCurrentLocation();
+                        _controller.animateCamera(
+                            CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
+
+                      },
+                      child: Icon(
+                        Icons.my_location,
+                        color: Colors.black,
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
                     SizedBox(
                       height: 3.h,
                     ),
+                    // FloatingActionButton(
+                    //   onPressed: () async {
+                    //     var gps = await getCurrentLocation();
+                    //     _controller.animateCamera(
+                    //         CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
+                    //
+                    //   },
+                    //   child: Icon(
+                    //     Icons.my_location,
+                    //     color: Colors.black,
+                    //   ),
+                    //   backgroundColor: Colors.white,
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
