@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'LoginScreen.dart';
-import 'MainScreen_Traveler.dart';
-import 'style.dart';
+import 'package:sherpa/UI/Login_Page.dart';
+import 'package:sherpa/Traveler/MainScreen_Traveler.dart';
+import 'package:sherpa/UI/style.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'provider/luggagesetting_provider.dart';
 
 
 void main() {
@@ -16,17 +18,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //ScreenUtil.init(context, designSize: Size(1440,3200));
-    return MaterialApp(
-      title: '셰르파',
-      home: AnimatedSplashScreen(
-        splash: Image.asset('assets/images/Sherpa_MainColor.png',
-            color: Colors.white
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<LuggageSettingProvider>(create: (_) => LuggageSettingProvider()),
+        ],
+      child: MaterialApp(
+        title: '셰르파',
+        home: AnimatedSplashScreen(
+          splash: Image.asset('assets/images/Sherpa_MainColor.png',
+              color: Colors.white
+          ),
+          splashIconSize: 150,
+          nextScreen: InitialPage(),
+          pageTransitionType: PageTransitionType.fade,
+          backgroundColor: Color.fromARGB(255, 161, 196, 253),
+          splashTransition: SplashTransition.fadeTransition,
         ),
-        splashIconSize: 150,
-        nextScreen: InitialPage(),
-        backgroundColor: Color.fromARGB(255, 161, 196, 253),
-        splashTransition: SplashTransition.fadeTransition,
       ),
     );
   }
@@ -80,6 +87,13 @@ class InitialPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                     borderRadius: BorderRadius.circular(90),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0.0.sp, 1.0.sp), //(x,y)
+                        blurRadius: 2.0,
+                      ),
+                    ],
                   ),
                   child: Text(
                     '셰르파와 함께하기  >',
