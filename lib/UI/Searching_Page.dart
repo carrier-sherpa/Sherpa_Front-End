@@ -5,6 +5,9 @@ import 'package:sherpa/UI/Login_Page.dart';
 import 'package:sherpa/Traveler/MainScreen_Traveler.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sherpa/UI/style.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class SearchingPage extends StatefulWidget {
   const SearchingPage({Key? key}) : super(key: key);
@@ -147,22 +150,30 @@ class _SearchingPageState extends State<SearchingPage> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                    children: <Widget> [
                       SizedBox(width: 20.w),
                       Icon(
                         Icons.flag,
                         color: Color.fromRGBO(252, 119, 119, 100),
                       ),
                       SizedBox(width: 15.w),
+
                       GestureDetector(
                         child: Container(
+                          width: 20.h,
+                          height: 10.h,
                           alignment: Alignment.center,
                           //color: Colors.amber,
-                          child: Text(
-                            '어디로 갈까요?',
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              color: Colors.grey,
+
+                          child:new Flexible(
+                            child: new TextField(
+                              // decoration: const InputDecoration(helperText: "어디로 짐을 보내실건가요"),
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                              ),
+                              onChanged: (input){
+                                _getAutocompletePlaces(input);
+                              },
                             ),
                           ),
                         ),
@@ -207,5 +218,27 @@ class _SearchingPageState extends State<SearchingPage> {
       ),
 
     );
+  }
+
+  Future<bool> _getAutocompletePlaces(input) async {
+    final str = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&language=ko&key=AIzaSyCrMf2ZtsjCreWP2F_wg-i-7dqJJUIjxgc';
+    final url = Uri.parse(str);
+
+    http.Response response = await http.get(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+      },
+    );
+    var json = jsonDecode(response.body);
+    print("주소는" + jsonDecode(response.body)['predictions'][0]["description"]);
+    print("주소는" + jsonDecode(response.body)['predictions'][0]["place_id"]);
+    print("placeId" + jsonDecode(response.body)['results'][0]['structured_formatting']['main_text']);
+    if(response.statusCode == 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }
