@@ -16,6 +16,10 @@ import 'package:sherpa/Controller/showLuggageSetting.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:sherpa/Deliveryman/MainScreen_Deliveryman.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 class MainScreen_Traveler extends StatefulWidget {
@@ -27,6 +31,7 @@ class MainScreen_Traveler extends StatefulWidget {
 
 class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
+  late GoogleMapController _controller;
 
   int price_small = 0;
   int price_mid = 0;
@@ -133,8 +138,27 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             ),
           ),
           child: Center(
+
             child: Column(
               children: [
+                // 이게 내가 추가한 부분(호ㅏ면이 깨져서 주석 처리)
+                // FloatingActionButton(
+                //   onPressed: () async {
+                //     LocationPermission permission = await Geolocator.requestPermission();
+                //     var gps = await getCurrentLocation();
+                //     var temp = await _getAllLuggage();
+                //     var value = await _getCurGeoCode(gps);
+                //     // addMarker(LatLng(gps.latitude, gps.longitude));
+                //     _controller.animateCamera(
+                //         CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
+                //
+                //   },
+                //   child: Icon(
+                //     Icons.my_location,
+                //     color: Colors.black,
+                //   ),
+                //   backgroundColor: Colors.white,
+                // ),
                 SizedBox(
                   height: 16.h,
                 ),
@@ -586,6 +610,12 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                 height: double.infinity,
                 child: GoogleMap(
                   mapType: MapType.normal,
+                  myLocationEnabled : true,
+                  onMapCreated: (controller) {
+                    setState(() {
+                      _controller = controller;
+                    });
+                  },
                   initialCameraPosition: _kGooglePlex,
                 ),
               ),
@@ -699,5 +729,63 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
         ),
       ),
     );
+  }
+  Future<bool> _getAllLuggage() async {
+
+    final url = Uri.parse("$rootUrl/luggage");
+
+    http.Response response = await http.get(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if(response.statusCode == 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  static const rootUrl = "http://sherpabackend-env.eba-4pbe4v4v.ap-northeast-2.elasticbeanstalk.com";
+
+  Future<bool> _getCurGeoCode(gps) async {
+    final str = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${gps.latitude},${gps.longitude}&key=AIzaSyCrMf2ZtsjCreWP2F_wg-i-7dqJJUIjxgc';
+    final url = Uri.parse(str);
+
+    http.Response response = await http.get(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+      },
+    );
+    var json = jsonDecode(response.body);
+    print("주소는" + jsonDecode(response.body)['results'][0]["formatted_address"]);
+    print("placeId" + jsonDecode(response.body)['results'][0]['place_id']);
+    if(response.statusCode == 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  Future<Position> getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition();
+
+    return position;
+  }
+
+  // 지도 클릭 시 표시할 장소에 대한 마커 목록
+  final List<Marker> markers = [];
+
+  addMarker(latLng) {
+    int id = 1;
+
+    setState(() {
+      markers
+          .add(Marker(position: latLng, markerId: MarkerId(id.toString())));
+    });
   }
 }
