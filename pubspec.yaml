@@ -38,6 +38,11 @@ dependencies:
   geolocator: ^8.0.1
   page_transition: ^2.0.9
   flutter_screenutil: ^5.6.0
+  sliding_up_panel: ^2.0.0+1
+  provider: ^6.0.2
+  direct_select: ^1.0.3
+  fluentui_system_icons: ^1.1.186
+  circular_menu: ^2.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -71,6 +76,7 @@ flutter:
   assets:
 
     - assets/images/Sherpa_MainColor.png
+    - assets/images/won.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

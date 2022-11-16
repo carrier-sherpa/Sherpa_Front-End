@@ -26,6 +26,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "circular_menu",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/circular_menu-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "clock",
       "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.1",
       "packageUri": "lib/",
@@ -44,8 +50,20 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "direct_select",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/direct_select-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
+    },
+    {
       "name": "fake_async",
       "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "fluentui_system_icons",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/fluentui_system_icons-1.1.186",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -188,6 +206,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "page_transition",
       "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/page_transition-2.0.9",
       "packageUri": "lib/",
@@ -206,8 +230,20 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "provider",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/provider-6.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/shinjewon/development/flutter/bin/cache/pkg/sky_engine",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sliding_up_panel",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/sliding_up_panel-2.0.0+1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -272,7 +308,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-07T13:03:09.121062Z",
+  "generated": "2022-11-14T12:43:56.225249Z",
   "generator": "pub",
-  "generatorVersion": "2.18.1"
+  "generatorVersion": "2.18.4"
 }
