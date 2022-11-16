@@ -180,6 +180,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                 height: double.infinity,
                 child: GoogleMap(
                   mapType: MapType.normal,
+                  myLocationEnabled : true,
                   initialCameraPosition: _kGooglePlex,
                 ),
               ),
