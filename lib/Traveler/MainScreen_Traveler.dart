@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sherpa/key.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:provider/provider.dart';
 import 'package:sherpa/provider/luggagesetting_provider.dart';
@@ -20,6 +21,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 
 class MainScreen_Traveler extends StatefulWidget {
@@ -43,8 +45,14 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
     zoom: 14.4746,
   );
 
+  String startPlace = "출발지";
+  String goalPlace = "도착지";
+  LatLng startPlaceLatLng = new LatLng(0, 0);
+  LatLng goalPlaceLatLng = new LatLng(0, 0);
+
   @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance!.addPostFrameCallback((_) => afterBuild);
     return Scaffold(
       key: _drawerKey,
       drawer: Drawer(
@@ -142,23 +150,24 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             child: Column(
               children: [
                 // 이게 내가 추가한 부분(호ㅏ면이 깨져서 주석 처리)
-                // FloatingActionButton(
-                //   onPressed: () async {
-                //     LocationPermission permission = await Geolocator.requestPermission();
-                //     var gps = await getCurrentLocation();
-                //     var temp = await _getAllLuggage();
-                //     var value = await _getCurGeoCode(gps);
-                //     // addMarker(LatLng(gps.latitude, gps.longitude));
-                //     _controller.animateCamera(
-                //         CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
-                //
-                //   },
-                //   child: Icon(
-                //     Icons.my_location,
-                //     color: Colors.black,
-                //   ),
-                //   backgroundColor: Colors.white,
-                // ),
+                FloatingActionButton(
+                  onPressed: () async {
+                    LocationPermission permission = await Geolocator.requestPermission();
+                    var gps = await getCurrentLocation();
+                    // afterBuild();
+                    // var temp = await _getAllLuggage();
+                    // var value = await _getCurGeoCode(gps);
+                    // addMarker(LatLng(gps.latitude, gps.longitude), "myLocation");
+                    _controller.animateCamera(
+                        CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
+
+                  },
+                  child: Icon(
+                    Icons.my_location,
+                    color: Colors.black,
+                  ),
+                  backgroundColor: Colors.white,
+                ),
                 SizedBox(
                   height: 16.h,
                 ),
@@ -272,24 +281,25 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                             alignment: Alignment.center,
                             //color: Colors.amber,
                             child: Text(
-                              '현위치: 근처 가게명 가져오기',
+                              '${startPlace}',
                               style: TextStyle(
                                 fontSize: 15.sp,
                               ),
                             ),
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                curve: Curves.easeInOut,
-                                duration: Duration(milliseconds: 600),
-                                reverseDuration: Duration(milliseconds: 600),
-                                type: PageTransitionType.bottomToTopJoined,
-                                child: SearchingPage(),
-                                childCurrent: MainScreen_Traveler(),
-                              ),
-                            );
+                            _navigateAndDisplaySelection(context);
+                            // Navigator.push(
+                            //   context,
+                            //   PageTransition(
+                            //     curve: Curves.easeInOut,
+                            //     duration: Duration(milliseconds: 600),
+                            //     reverseDuration: Duration(milliseconds: 600),
+                            //     type: PageTransitionType.bottomToTopJoined,
+                            //     child: SearchingPage(),
+                            //     childCurrent: MainScreen_Traveler(),
+                            //   ),
+                            // );
                           },
                         ),
                       ],
@@ -328,7 +338,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                             alignment: Alignment.center,
                             //color: Colors.amber,
                             child: Text(
-                              '어디로 갈까요?',
+                              '${goalPlace}',
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 color: Colors.grey,
@@ -336,17 +346,18 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                             ),
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                curve: Curves.easeInOut,
-                                duration: Duration(milliseconds: 600),
-                                reverseDuration: Duration(milliseconds: 600),
-                                type: PageTransitionType.bottomToTopJoined,
-                                child: SearchingPage(),
-                                childCurrent: MainScreen_Traveler(),
-                              ),
-                            );
+                            _navigateAndDisplaySelection(context);
+                            // Navigator.push(
+                            //   context,
+                            //   PageTransition(
+                            //     curve: Curves.easeInOut,
+                            //     duration: Duration(milliseconds: 600),
+                            //     reverseDuration: Duration(milliseconds: 600),
+                            //     type: PageTransitionType.bottomToTopJoined,
+                            //     child: SearchingPage(),
+                            //     childCurrent: MainScreen_Traveler(),
+                            //   ),
+                            // );
                           },
                         ),
                       ],
@@ -611,9 +622,13 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                 child: GoogleMap(
                   mapType: MapType.normal,
                   myLocationEnabled : true,
+                  // 이거 마커 추가 하려면 하면 됨
+                  polylines: Set<Polyline>.of(polylines.values),
+                  markers: Set.from(markers),
                   onMapCreated: (controller) {
                     setState(() {
                       _controller = controller;
+                      afterBuild();
                     });
                   },
                   initialCameraPosition: _kGooglePlex,
@@ -676,7 +691,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                       reverseDuration:
                                           Duration(milliseconds: 100),
                                       type: PageTransitionType.fade,
-                                      child: SearchingPage(),
+                                      child: SearchingPage(startPlace: startPlace, goalPlace: goalPlace),
                                       childCurrent: MainScreen_Traveler(),
                                     ),
                                   );
@@ -730,6 +745,23 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
       ),
     );
   }
+
+  void afterBuild() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    var gps = await getCurrentLocation();
+    LatLng curLatLng = LatLng(gps.latitude, gps.longitude);
+    _showCurLocation(curLatLng, gps);
+    startPlaceLatLng = curLatLng;
+    // executes after build is done
+  }
+
+  void _showCurLocation(latLng, gps) async {
+    String address = await _getCurGeoCode(gps);
+    setState(() {
+      startPlace = address;
+    });
+  }
+
   Future<bool> _getAllLuggage() async {
 
     final url = Uri.parse("$rootUrl/luggage");
@@ -751,9 +783,10 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
 
   static const rootUrl = "http://sherpabackend-env.eba-4pbe4v4v.ap-northeast-2.elasticbeanstalk.com";
 
-  Future<bool> _getCurGeoCode(gps) async {
-    final str = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${gps.latitude},${gps.longitude}&key=AIzaSyCrMf2ZtsjCreWP2F_wg-i-7dqJJUIjxgc';
+  Future<String> _getCurGeoCode(gps) async {
+    final str = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${gps.latitude},${gps.longitude}&key=${Api.KEY}';
     final url = Uri.parse(str);
+    String address = startPlace;
 
     http.Response response = await http.get(
       url,
@@ -761,14 +794,17 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
         'Content-Type': 'application/json',
       },
     );
-    var json = jsonDecode(response.body);
-    print("주소는" + jsonDecode(response.body)['results'][0]["formatted_address"]);
-    print("placeId" + jsonDecode(response.body)['results'][0]['place_id']);
+    var info = jsonDecode(response.body);
+    print("주소는" + info['results'][0]["formatted_address"]);
+    print("placeId" + info['results'][0]['place_id']);
+
+    address = info['results'][0]["formatted_address"];
+
     if(response.statusCode == 200) {
-      return true;
+      return address;
     }
     else {
-      return false;
+      return address;
     }
   }
   Future<Position> getCurrentLocation() async {
@@ -780,12 +816,84 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   // 지도 클릭 시 표시할 장소에 대한 마커 목록
   final List<Marker> markers = [];
 
-  addMarker(latLng) {
-    int id = 1;
+  addMarker(latLng, id) {
 
     setState(() {
       markers
-          .add(Marker(position: latLng, markerId: MarkerId(id.toString())));
+          .add(Marker(position: latLng, markerId: MarkerId(id.toString()), onTap: () {
+            print("마커가 클릭됨");
+      },));
     });
+  }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push는 Future를 반환합니다. Future는 선택 창에서
+    // Navigator.pop이 호출된 이후 완료될 것입니다.
+    // List<String> result = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => SearchingPage()),
+    // );
+
+    dynamic result = await Navigator.push(
+      context,
+      PageTransition(
+        curve: Curves.easeInOut,
+        duration: Duration(milliseconds: 600),
+        reverseDuration: Duration(milliseconds: 600),
+        type: PageTransitionType.bottomToTopJoined,
+        child: SearchingPage(startPlace: startPlace, goalPlace: goalPlace),
+        childCurrent: MainScreen_Traveler(),
+      ),
+    );
+
+    startPlaceLatLng = new LatLng(result[1][0][0], result[1][0][1]);
+    goalPlaceLatLng = new LatLng(result[1][1][0], result[1][1][1]);
+
+    addMarker(startPlaceLatLng, "startPlace");
+    addMarker(goalPlaceLatLng, "goalPlace");
+
+    setState(() {
+      startPlace = result[0][0];
+      goalPlace = result[0][1];
+    });
+
+    drawPolyline();
+    // 선택 창으로부터 결과 값을 받은 후, 이전에 있던 snackbar는 숨기고 새로운 결과 값을
+    // 보여줍니다.
+  }
+
+  PolylinePoints polylinePoints = PolylinePoints();
+  Map<PolylineId, Polyline> polylines = {};
+
+
+  void drawPolyline () async {
+    List<LatLng> polylineCoordinates = [];
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      Api.KEY,
+      PointLatLng(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+      PointLatLng(goalPlaceLatLng.latitude, goalPlaceLatLng.longitude),
+      travelMode: TravelMode.transit,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+    addPolyLine(polylineCoordinates);
+  }
+
+  addPolyLine(List<LatLng> polylineCoordinates) {
+    PolylineId id = PolylineId("poly");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.deepPurpleAccent,
+      points: polylineCoordinates,
+      width: 8,
+    );
+    polylines[id] = polyline;
+    setState(() {});
   }
 }

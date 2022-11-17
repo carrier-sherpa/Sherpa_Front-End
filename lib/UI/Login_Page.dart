@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:sherpa/Traveler/MainScreen_Traveler.dart';
 import 'package:sherpa/UI/style.dart';
+import 'package:sherpa/key.dart';
 import 'package:sherpa/main.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +42,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  static const rootUrl = "http://localhost:5000/members";
+  static const rootUrl = "http://sherpabackend-env.eba-4pbe4v4v.ap-northeast-2.elasticbeanstalk.com/members";
   String email = "";
   String password = "";
   String userInfo = "";
@@ -98,6 +99,7 @@ class _LoginFormState extends State<LoginForm> {
     );
 
     if(response.statusCode == 200) {
+      Api.JSESSIONID = response.headers['set-cookie']!;
       return true;
     }
     else {
@@ -287,7 +289,7 @@ class _LoginFormState extends State<LoginForm> {
             FloatingActionButton.extended(
               backgroundColor: SherpaColor.sherpa_main,
               onPressed: () async {
-                bool response = await _signupRequest();
+                bool response = await _signinRequest();
 
                 if(response){
 
