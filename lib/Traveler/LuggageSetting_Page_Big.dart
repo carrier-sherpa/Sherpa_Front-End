@@ -4,6 +4,7 @@ import 'package:sherpa/Traveler/LuggageSizeTile_Small.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sherpa/provider/luggagesetting_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:sherpa/UI/style.dart';
 
 
 class LuggageSettingBig extends StatefulWidget {
