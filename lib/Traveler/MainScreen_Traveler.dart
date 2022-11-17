@@ -16,7 +16,11 @@ import 'package:sherpa/Controller/showLuggageSetting.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:sherpa/Deliveryman/MainScreen_Deliveryman.dart';
-
+import 'package:bottomreveal/bottomreveal.dart';
+import 'package:sherpa/Controller/showReservationTimeSetting.dart';
+import 'package:sherpa/UI/Button/BottomReveal.dart';
+import 'package:sherpa/provider/ReservationTimeSetting_Provider.dart';
+import 'package:sherpa/Traveler/DecideReservationPage.dart';
 
 class MainScreen_Traveler extends StatefulWidget {
   const MainScreen_Traveler({Key? key}) : super(key: key);
@@ -28,10 +32,11 @@ class MainScreen_Traveler extends StatefulWidget {
 class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
 
+  final BottomRevealController _menuController = BottomRevealController();
+
   int price_small = 0;
   int price_mid = 0;
   int price_big = 0;
-
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.5031798, 126.9572013),
@@ -108,7 +113,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
       body: SlidingUpPanel(
         //여행객 설정 화면
         minHeight: 64.sp,
-        maxHeight: 480.sp,
+        maxHeight: 720.sp,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.0),
           topRight: Radius.circular(24.0),
@@ -150,7 +155,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                   height: 8.h,
                 ),
                 Text(
-                  "목적지와 짐 설정하기",
+                  "예약하기",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.sp,
@@ -198,41 +203,10 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                         SizedBox(
                           width: 20.w,
                         ),
-                        GestureDetector(
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 100.w,
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: SherpaColor.sherpa_sub,
-                              border: Border.all(
-                                color: Colors.white30,
-                              ),
-                              borderRadius: BorderRadius.circular(90),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0.sp, 1.0.sp), //(x,y)
-                                  blurRadius: 2.0,
-                                ),
-                              ],
-                            ),
-                            child: Text(
-                              '짐 설정하기',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            showLuggageSetting(context);
-                          },
-                        ),
                       ],
                     ),
                     SizedBox(
-                      height: 40.h,
+                      height: 32.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -333,241 +307,345 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                     Container(
                       height: 10.h,
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: FractionalOffset(0.0, 0.0),
-                          end: FractionalOffset(1.0, 0.0),
-                          colors: <Color>[
-                            Color.fromRGBO(161, 196, 253, 100),
-                            Color.fromRGBO(252, 195, 195, 100),
-                          ],
-                        ),
-                      ),
+                      color: Colors.black12,
                     ),
                     SizedBox(
                       height: 10.h,
                     ),
+
+                    // 짐 설정 버튼, 문구, 선택된 화면을 포함하는 Container
                     Container(
-                      child: Row(
+                      child: Column(
                         children: [
-                          SizedBox(
-                            width: 20.w,
-                          ),
                           Container(
                             child: Row(
                               children: [
+                                SizedBox(
+                                  width: 20.w,
+                                ),
                                 Text(
-                                  '총 금액: ',
+                                  '설정하신 짐',
                                   style: TextStyle(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 10.w,
-                                ),
-                                Container(
-                                  child: Image.asset('assets/images/won.png',
-                                    height:20.h,
-                                    width: 20.w,
-                                    color: SherpaColor.sherpa_main,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000 +
-                                      Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000+
-                                      Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  width: 160.w,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: 80.w,
+                            height: 8.h,
                           ),
-                          Text(
-                            '설정하신 짐',
-                            style: TextStyle(
-                              fontSize: 20.sp,
+                          Container(
+                            width: double.infinity,
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: SherpaColor.sherpa_sub,
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.card_travel,
+                                      size: 40.sp,
+                                    ),
+                                    title: Text(
+                                      '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000} 원',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      '(소) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).small_luggage_num}',
+                                      style: TextStyle(fontSize: 10.sp),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                    onTap: () {
+                                      showLuggageSetting(context);
+                                    },
+                                    textColor: Colors.white,
+                                    iconColor: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: SherpaColor.sherpa_main,
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.card_travel,
+                                      size: 40.sp,
+                                    ),
+                                    title: Text(
+                                      '${Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000} 원',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      '(중) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).mid_luggage_num}',
+                                      style: TextStyle(fontSize: 10.sp),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                    onTap: () {
+                                      showLuggageSetting(context);
+                                    },
+                                    textColor: Colors.white,
+                                    iconColor: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: SherpaColor.sherpa_red,
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.card_travel,
+                                      size: 40.sp,
+                                    ),
+                                    title: Text(
+                                      '${Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000} 원',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      '(대) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).big_luggage_num}',
+                                      style: TextStyle(fontSize: 10.sp),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                    onTap: () {
+                                      showLuggageSetting(context);
+                                    },
+                                    textColor: Colors.white,
+                                    iconColor: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(
-                            width: 20.w,
                           ),
                         ],
                       ),
                     ),
+
                     Container(
+                      height: 10.h,
                       width: double.infinity,
-                      child: ListView(
-                        shrinkWrap: true,
+                      color: Colors.black12,
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+
+                    // 시간 설정 버튼, 문구, 선택된 화면을 포함하는 Container
+                    Container(
+                      child: Column(
                         children: [
                           Container(
-                            height: 1.h,
-                            color: SherpaColor.sherpa_main,
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Container(
-                            width: double.infinity,
                             child: Row(
                               children: [
                                 SizedBox(
                                   width: 20.w,
                                 ),
-                                Icon(
-                                  Icons.card_travel,
-                                  size: 50.sp,
-                                ),
-                                SizedBox(
-                                  width: 50.w,
-                                ),
                                 Text(
-                                  '소 갯수: ${Provider.of<LuggageSettingProvider>(context).small_luggage_num}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 50.w,
-                                ),
-                                Container(
-                                  child: Image.asset('assets/images/won.png',
-                                    height:20.h,
-                                    width: 20.w,
-                                    color: SherpaColor.sherpa_main,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 30.w,
-                                ),
-                                Text('${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000}',
+                                  '예약시간을 설정해주세요',
                                   style: TextStyle(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
+                              // 문구 Row 끝
                             ),
                           ),
                           SizedBox(
-                            height: 5.h,
-                          ),
-                          Container(
-                            height: 1.h,
-                            color: SherpaColor.sherpa_main,
-                          ),
-                          SizedBox(
-                            height: 5.h,
+                            height: 8.h,
                           ),
                           Container(
                             width: double.infinity,
-                            child: Row(
+                            child: ListView(
+                              shrinkWrap: true,
                               children: [
-                                SizedBox(
-                                  width: 20.w,
-                                ),
-                                Icon(
-                                  Icons.backpack,
-                                  size: 50.sp,
-                                ),
-                                SizedBox(
-                                  width: 50.w,
-                                ),
-                                Text(
-                                  '중 갯수: ${Provider.of<LuggageSettingProvider>(context).mid_luggage_num}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
+                                Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: SherpaColor.sherpa_sub,
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.directions_walk,
+                                      size: 32.sp,
+                                    ),
+                                    title: Text(
+                                      '출발시간:    ' +
+                                          Provider.of<ReservationTimeSettingProvider>(context).department_hours.padLeft(2, '0') + '시'
+                                          + Provider.of<ReservationTimeSettingProvider>(context).department_mins.padLeft(2, '0') + '분',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                    onTap: () {
+                                      showReservationTimeSetting(context);
+                                    },
+                                    textColor: Colors.white,
+                                    iconColor: Colors.white,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 50.w,
+                                  height: 8.h,
                                 ),
                                 Container(
-                                  child: Image.asset('assets/images/won.png',
-                                    height:20.h,
-                                    width: 20.w,
-                                    color: SherpaColor.sherpa_main,
+                                  margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: SherpaColor.sherpa_red,
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.flag,
+                                      size: 32.sp,
+                                    ),
+                                    title: Text(
+                                      '도착시간:    ' +
+                                          Provider.of<ReservationTimeSettingProvider>(context).arrive_hours.padLeft(2, '0') + '시'
+                                          + Provider.of<ReservationTimeSettingProvider>(context).arrive_mins.padLeft(2, '0') + '분',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                    onTap: () {
+                                      showReservationTimeSetting(context);
+                                    },
+                                    textColor: Colors.white,
+                                    iconColor: Colors.white,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 30.w,
-                                ),
-                                Text('${Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  height: 8.h,
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Container(
-                            height: 1.h,
-                            color: SherpaColor.sherpa_main,
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Container(
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 20.w,
-                                ),
-                                Icon(
-                                  Icons.backpack,
-                                  size: 50.sp,
-                                ),
-                                SizedBox(
-                                  width: 50.w,
-                                ),
-                                Text(
-                                  '대 갯수: ${Provider.of<LuggageSettingProvider>(context).big_luggage_num}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 50.w,
-                                ),
-                                Container(
-                                  child: Image.asset('assets/images/won.png',
-                                    height:20.h,
-                                    width: 20.w,
-                                    color: SherpaColor.sherpa_main,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 30.w,
-                                ),
-                                Text('${Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 12.h,
+                    ),
+
+                    Container(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 16.w,),
+                          Text(
+                            '총 금액: ',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(
-                            height: 5.h,
+                            width: 10.w,
                           ),
                           Container(
-                            height: 1.h,
-                            color: SherpaColor.sherpa_main,
+                            child: Image.asset(
+                              'assets/images/won.png',
+                              height: 20.h,
+                              width: 20.w,
+                              color: SherpaColor.sherpa_main,
+                            ),
                           ),
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          Text(
+                            '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000 + Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000 + Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000}',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          SizedBox(
+                            width: 80.w,
+                          ),
+
+                          GestureDetector(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 100.w,
+                              height: 50.h,
+                              decoration: BoxDecoration(
+                                color: SherpaColor.sherpa_main,
+                                border: Border.all(
+                                  color: Colors.white30,
+                                ),
+                                borderRadius: BorderRadius.circular(60),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0.sp, 1.0.sp), //(x,y)
+                                    blurRadius: 2.0,
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                '예약하기',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  curve: Curves.easeInOut,
+                                  duration: Duration(milliseconds: 100),
+                                  reverseDuration:
+                                  Duration(milliseconds: 100),
+                                  type: PageTransitionType.fade,
+                                  child: DecideReservationPage(),
+                                  childCurrent: MainScreen_Traveler(),
+                                ),
+                              );
+                            },
+                          ),
+
                         ],
                       ),
                     ),
@@ -628,7 +706,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                               ),
                               GestureDetector(
                                 child: Container(
-                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(10.sp, 0, 0, 0),
                                   child: Text(
                                     '장소, 카페, 호텔 주소 검색',
                                     style: TextStyle(
@@ -660,34 +738,14 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                         width: 10.w,
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                        child: GestureDetector(
-                          child: Container(
-                            width: 50.w,
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: SherpaColor.sherpa_main,
-                              border: Border.all(
-                                color: Colors.white,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(Icons.directions_walk),
+                        padding: EdgeInsets.fromLTRB(0, 50.sp, 0, 0),
+                        child: Container(
+                          width: 50.w,
+                          height: 50.h,
+                          color: Colors.red,
+                          child: Scaffold(
+                            body: BottomRevealBtn(),
                           ),
-                          onTap: (){
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                curve: Curves.easeInOut,
-                                duration: Duration(milliseconds: 100),
-                                reverseDuration:
-                                Duration(milliseconds: 100),
-                                type: PageTransitionType.fade,
-                                child: MainScreen_Deliveryman(),
-                                childCurrent: MainScreen_Traveler(),
-                              ),
-                            );
-                          },
                         ),
                       ),
                     ],

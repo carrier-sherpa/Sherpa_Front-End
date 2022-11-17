@@ -7,6 +7,9 @@ import 'package:sherpa/UI/style.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'provider/luggagesetting_provider.dart';
+import 'package:sherpa/provider/ReservationTimeSetting_Provider.dart';
+import 'package:sherpa/provider/luggagesetting_provider.dart';
+
 
 
 void main() {
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<LuggageSettingProvider>(create: (_) => LuggageSettingProvider()),
+          ChangeNotifierProvider<ReservationTimeSettingProvider>(create: (_) => ReservationTimeSettingProvider()),
         ],
       child: MaterialApp(
         title: '셰르파',
@@ -104,6 +108,7 @@ class InitialPage extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.push(context,
                       MaterialPageRoute(
                           builder: (context) => MyLoginPage(title: '로그인 하기'))

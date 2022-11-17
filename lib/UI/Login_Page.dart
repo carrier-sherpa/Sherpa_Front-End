@@ -217,14 +217,15 @@ class _LoginFormState extends State<LoginForm> {
             FloatingActionButton.extended(
               backgroundColor: SherpaColor.sherpa_main,
               onPressed: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                );//로그인 돼서 메인화면으로 넘어가는 기능 추가하는 중
+                );
               },
               label: Text('로그인하기',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),

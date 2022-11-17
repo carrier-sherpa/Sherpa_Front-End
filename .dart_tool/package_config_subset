@@ -14,6 +14,10 @@ boolean_selector
 2.12
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib/
+bottomreveal
+2.12
+file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/bottomreveal-2.0.0/
+file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/bottomreveal-2.0.0/lib/
 characters
 2.12
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.1/
@@ -58,6 +62,10 @@ flutter_screenutil
 2.12
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_screenutil-5.6.0/
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_screenutil-5.6.0/lib/
+flutter_time_picker_spinner
+2.12
+file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_time_picker_spinner-2.0.0/
+file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_time_picker_spinner-2.0.0/lib/
 geolocator
 2.12
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/geolocator-8.2.1/
@@ -146,6 +154,10 @@ provider
 2.12
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/provider-6.0.4/
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/provider-6.0.4/lib/
+simple_speed_dial
+2.12
+file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/simple_speed_dial-0.1.7/
+file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/simple_speed_dial-0.1.7/lib/
 sliding_up_panel
 2.12
 file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/sliding_up_panel-2.0.0+1/

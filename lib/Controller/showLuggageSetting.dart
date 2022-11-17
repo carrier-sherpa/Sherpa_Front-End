@@ -25,41 +25,71 @@ void showLuggageSetting(context) {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: SherpaColor.sherpa_sub,
+                    ),
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
                         LuggageSizeTileSmall(),
                         SizedBox(
                           height: 12.h,
                         ),
                         LuggageSettingSmall(),
+                        SizedBox(
+                          height: 8.h,
+                        ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 30.h,
+                    height: 16.h,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: SherpaColor.sherpa_main,
+                    ),
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
                         LuggageSizeTileMid(),
                         SizedBox(
                           height: 12.h,
                         ),
                         LuggageSettingMid(),
+                        SizedBox(
+                          height: 8.h,
+                        ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 30.h,
+                    height: 16.h,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: SherpaColor.sherpa_red,
+                    ),
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
                         LuggageSizeTileBig(),
                         SizedBox(
                           height: 12.h,
                         ),
                         LuggageSettingBig(),
+                        SizedBox(
+                          height: 8.h,
+                        ),
                       ],
                     ),
                   ),

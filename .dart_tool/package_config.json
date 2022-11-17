@@ -20,6 +20,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "bottomreveal",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/bottomreveal-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "characters",
       "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.1",
       "packageUri": "lib/",
@@ -96,6 +102,12 @@
       "rootUri": "file:///Users/shinjewon/development/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_time_picker_spinner",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_time_picker_spinner-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_web_plugins",
@@ -236,6 +248,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "simple_speed_dial",
+      "rootUri": "file:///Users/shinjewon/development/flutter/.pub-cache/hosted/pub.dartlang.org/simple_speed_dial-0.1.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/shinjewon/development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -308,7 +326,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-14T12:43:56.225249Z",
+  "generated": "2022-11-16T12:40:36.681351Z",
   "generator": "pub",
   "generatorVersion": "2.18.4"
 }
