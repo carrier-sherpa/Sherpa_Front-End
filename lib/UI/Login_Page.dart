@@ -79,11 +79,13 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  Future<bool> _signinRequest() async {
+  bool _signinRequest()  {
     email = emailController.text;
     password = passwordController.text;
 
-    final url = Uri.parse("$rootUrl/signin");
+    return true;
+
+    /*final url = Uri.parse("$rootUrl/signin");
 
     http.Response response = await http.post(
       url,
@@ -104,7 +106,7 @@ class _LoginFormState extends State<LoginForm> {
     }
     else {
       return false;
-    }
+    }*/
   }
 
 
@@ -288,36 +290,27 @@ class _LoginFormState extends State<LoginForm> {
             ),
             FloatingActionButton.extended(
               backgroundColor: SherpaColor.sherpa_main,
+
               onPressed: () async {
                 bool response = await _signinRequest();
-
                 if(response){
-
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                  );//로그인 돼서 메인화면으로 넘어가는 기능 추가하는 중
-                } else {
-
+                  );
                 }
 
-                // await storage.write(
-                //     key: "login",
-                //     value: "id " +
-                //         emailController.text.toString() +
-                //         " " +
-                //         "password " +
-                //         passwordController.text.toString());
+                else {
+                  loginErrorMsg();
+                }
 
-                // postRequest();
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                // );//로그인 돼서 메인화면으로 넘어가는 기능 추가하는 중
+
+
               },
               label: Text('로그인하기',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -326,5 +319,41 @@ class _LoginFormState extends State<LoginForm> {
         ),
       ),
     );
+  }
+
+
+  loginErrorMsg() async {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Text("로그인 정보가 틀렸습니다."),
+              ],
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+              ],
+            ),
+            actions: <Widget>[
+              new TextButton(
+                child: new Text("확인"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }

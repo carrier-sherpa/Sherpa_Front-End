@@ -20,8 +20,8 @@ class SearchingPage extends StatefulWidget {
 }
 
 class _SearchingPageState extends State<SearchingPage> {
-  List<String> listTexts = ["1번","2번","3번","4번","5번"];
-  List<String> placeIdTexts = ["1번","2번","3번","4번","5번"];
+  List<String> listTexts = ["","","","",""];
+  List<String> placeIdTexts = ["","","","",""];
   List<String> places = ["",""];
   List<String> placeIds = ["",""];
   String startPlaceId = "";
@@ -73,7 +73,7 @@ class _SearchingPageState extends State<SearchingPage> {
                               borderRadius: BorderRadius.circular(90),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey,
+                                  color: Colors.white,
                                   offset: Offset(0.0.sp, 1.0.sp), //(x,y)
                                   blurRadius: 2.0,
                                 ),
@@ -137,8 +137,8 @@ class _SearchingPageState extends State<SearchingPage> {
                       SizedBox(width: 15.w),
                       GestureDetector(
                         child: Container(
-                          height: 10.h,
-                          width: 350.w,
+                          height: 30.h,
+                          width: 300.w,
                           alignment: Alignment.center,
 
                           //color: Colors.amber,
@@ -212,8 +212,8 @@ class _SearchingPageState extends State<SearchingPage> {
 
                       GestureDetector(
                         child: Container(
-                            height: 10.h,
-                            width: 350.w,
+                            height: 30.h,
+                            width: 300.w,
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           child: Flexible(
@@ -290,7 +290,7 @@ class _SearchingPageState extends State<SearchingPage> {
                   children: <Widget>[
                     Container(
                       height: 50,
-                      color: Colors.grey,
+                      color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
                             onTap: () {
@@ -302,7 +302,7 @@ class _SearchingPageState extends State<SearchingPage> {
                     ),
                     Container(
                       height: 50,
-                      color: Colors.grey,
+                      color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
                             onTap: () {
@@ -314,7 +314,7 @@ class _SearchingPageState extends State<SearchingPage> {
                     ),
                     Container(
                       height: 50,
-                      color: Colors.grey,
+                      color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
                             onTap: () {
@@ -326,7 +326,7 @@ class _SearchingPageState extends State<SearchingPage> {
                     ),
                     Container(
                       height: 50,
-                      color: Colors.grey,
+                      color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
                             onTap: () {
@@ -338,7 +338,7 @@ class _SearchingPageState extends State<SearchingPage> {
                     ),
                     Container(
                       height: 50,
-                      color: Colors.grey,
+                      color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
                             onTap: () {
@@ -375,7 +375,7 @@ class _SearchingPageState extends State<SearchingPage> {
   }
 
   Future<bool> _getAutocompletePlaces(input) async {
-    final str = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&language=ko&key=${Api.KEY}';
+    final str = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&region=kr&language=ko&key=${Api.KEY}';
     final url = Uri.parse(str);
 
     http.Response response = await http.get(
