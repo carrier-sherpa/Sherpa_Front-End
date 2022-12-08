@@ -743,7 +743,11 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                         size: 40.sp,
                                       ),
                                       onPressed: () {
-                                        _drawerKey.currentState!.openDrawer();
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Luggage_List_Page())
+                                        );
+                                        // _drawerKey.currentState!.openDrawer();
                                       },
                                     ),
                                     GestureDetector(
@@ -807,46 +811,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                 ),
               ),
             ),
-            Column(
-              children: [
 
-                SizedBox(
-                  height: 90.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => Luggage_List_Page())
-                        );
-                      },
-                      child: Container(
-                        width: 80.w,
-                        height: 80.h,
-                        decoration: BoxDecoration(
-                            color: SherpaColor.sherpa_sub,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: SherpaColor.sherpa_red, width: 3)
-                        ),
-                        child: Center(
-                          child: Text('짐 목록',
-                            style: TextStyle(
-                                fontSize: 24.sp
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16.w,
-                    ),
-                  ],
-                ),
-              ],
-            ),
           ],
         ),
       ),

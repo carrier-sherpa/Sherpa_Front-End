@@ -22,6 +22,7 @@ import 'package:sherpa/provider/ReservationTimeSetting_Provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:convert';
+import '../Traveler/Luggage_List.dart';
 import '../Traveler/MyOrder_Page.dart';
 import 'package:sherpa/key.dart';
 import 'package:sherpa/Controller/showReservationTimeSetting.dart';
@@ -54,6 +55,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
   String luggageId = "";
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
+  bool _orderVisiblity = false;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.5031798, 126.9572013),
@@ -383,49 +385,53 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                             child: ListView(
                               shrinkWrap: true,
                               children: [
-                                Container(
-                                  margin:
-                                  EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: SherpaColor.sherpa_sub,
-                                  ),
-                                  child: ListTile(
-                                    leading: Icon(
-                                      Icons.card_travel,
-                                      size: 40.sp,
-                                    ),
-                                    title: Text(
-                                      '$luggageName',
-                                      style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold,
+                                Visibility(
+                                  visible: _orderVisiblity,
+                                    child: Container(
+                                      margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: SherpaColor.sherpa_sub,
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(
+                                          Icons.card_travel,
+                                          size: 40.sp,
+                                        ),
+                                        title: Text(
+                                          '$luggageName',
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          '세부 정보',
+                                          style: TextStyle(fontSize: 10.sp),
+                                        ),
+                                        trailing: Icon(Icons.navigate_next),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              curve: Curves.easeInOut,
+                                              duration: Duration(milliseconds: 100),
+                                              reverseDuration:
+                                              Duration(milliseconds: 100),
+                                              type: PageTransitionType.fade,
+                                              child: Delivery_Info_page(str: "원동연님의 캐리어", luggageId: luggageId),
+                                              childCurrent: MainScreen_Deliveryman(),
+                                            ),
+                                          );
+                                          //showLuggageSetting(context);
+                                        },
+                                        textColor: Colors.white,
+                                        iconColor: Colors.white,
                                       ),
                                     ),
-                                    subtitle: Text(
-                                      '세부 정보',
-                                      style: TextStyle(fontSize: 10.sp),
-                                    ),
-                                    trailing: Icon(Icons.navigate_next),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          curve: Curves.easeInOut,
-                                          duration: Duration(milliseconds: 100),
-                                          reverseDuration:
-                                          Duration(milliseconds: 100),
-                                          type: PageTransitionType.fade,
-                                          child: Delivery_Info_page(str: "원동연님의 캐리어", luggageId: luggageId),
-                                          childCurrent: MainScreen_Deliveryman(),
-                                        ),
-                                      );
-                                      //showLuggageSetting(context);
-                                    },
-                                    textColor: Colors.white,
-                                    iconColor: Colors.white,
-                                  ),
                                 ),
+
                                 SizedBox(
                                   height: 8.h,
                                 ),
@@ -494,7 +500,11 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                                         size: 40.sp,
                                       ),
                                       onPressed: () {
-                                        _drawerKey.currentState!.openDrawer();
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Delivery_List_Page())
+                                        );
+                                        // _drawerKey.currentState!.openDrawer();
                                       },
                                     ),
                                     GestureDetector(
@@ -559,45 +569,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                 ),
               ),
             ),
-            Column(
-              children: [
-                SizedBox(
-                  height: 90.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => Delivery_List_Page())
-                        );
-                      },
-                      child: Container(
-                        width: 80.w,
-                        height: 80.h,
-                        decoration: BoxDecoration(
-                            color: SherpaColor.sherpa_sub,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: SherpaColor.sherpa_red, width: 3)
-                        ),
-                        child: Center(
-                          child: Text('짐 목록',
-                            style: TextStyle(
-                                fontSize: 24.sp
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16.w,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+
           ],
         ),
       ),
@@ -693,11 +665,13 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
       },
     );
 
+
     if(response.statusCode == 200) {
       var info = jsonDecode(response.body);
       var luggage = info[0];
       luggageId = luggage['orderId'];
       luggageName = "원동연님의 캐리어";
+      _orderVisiblity = true;
 
       // info.forEach((luggage) => {
       //   if(luggage['status'] == "REGISTER"){
