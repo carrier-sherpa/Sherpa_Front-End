@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:sherpa/UI/style.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:sherpa/key.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import '../Controller/showLuggageSetting.dart';
+import '../Controller/showReservationTimeSetting.dart';
+import '../UI/Searching_Page.dart';
+import '../provider/luggagesetting_provider.dart';
 
 class Order_Info_page extends StatefulWidget {
   String str = '';
@@ -44,6 +51,8 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
   final List<Marker> markers = [];
 
+  bool _buttonVisiblity = true;
+  String _buttonMsg = '';
 
   @override
   void initState() {
@@ -53,6 +62,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.str),
@@ -124,6 +134,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                               ),
                             ),
                             onTap: () {
+                              _navigateAndDisplaySelection(context);
                             },
                           ),
                         ],
@@ -382,6 +393,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                       ),
                                       trailing: Icon(Icons.navigate_next),
                                       onTap: () {
+                                        // showReservationTimeSetting(context);
                                       },
                                       textColor: Colors.white,
                                       iconColor: Colors.white,
@@ -411,6 +423,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                       ),
                                       trailing: Icon(Icons.navigate_next),
                                       onTap: () {
+                                        // showReservationTimeSetting(context);
                                       },
                                       textColor: Colors.white,
                                       iconColor: Colors.white,
@@ -486,28 +499,25 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                     ),
                                   ],
                                 ),
-                                child: Text(
-                                  '신고하기',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                child: Visibility(
+                                  visible: _buttonVisiblity,
+                                    child: Text(
+                                      '${_buttonMsg}',
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                )
                               ),
                               onTap: () {
-                                showReportForm();
-                                // Navigator.push(
-                                //   context,
-                                //   PageTransition(
-                                //     curve: Curves.easeInOut,
-                                //     duration: Duration(milliseconds: 100),
-                                //     reverseDuration:
-                                //     Duration(milliseconds: 100),
-                                //     type: PageTransitionType.fade,
-                                //     child: DecideReservationPage(),
-                                //     childCurrent: MainScreen_Traveler(),
-                                //   ),
-                                // );
+                                if(_isRegister()) {
+                                  updateOrder();
+                                }
+
+                                if(_isArrive()) {
+                                  showReportForm();
+                                }
                               },
                             ),
 
@@ -582,6 +592,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
       endTime = info['endTime'];
       startPlaceLatLng = getLatLng(info['start']);
       goalPlaceLatLng = getLatLng(info['end']);
+      _changeButtonByStatus(info['status']);
       _setLuggageInfo(info['luggages']);
       drawPolyline();
 
@@ -786,5 +797,82 @@ class _Order_Info_pageState extends State<Order_Info_page> {
             ],
           );
         });
+  }
+
+  void _changeButtonByStatus(status) {
+    if (status == "ACCEPT") {
+      _hideButton();
+    } else if (status == "REGISTER") {
+      _buttonMsg = "수정하기";
+      _showButton();
+    } else if (status == "ARRIVE") {
+      _buttonMsg = "신고하기";
+      _showButton();
+    }
+
+    return;
+
+    setState(() {
+    });
+  }
+
+  void _showButton() {
+    _buttonVisiblity = true;
+    setState(() {});
+  }
+
+  void _hideButton() {
+    _buttonVisiblity = false;
+    setState(() {});
+  }
+
+  bool _isArrive() {
+    if (_buttonMsg == "ARRIVE") {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool _isRegister() {
+    if (_buttonMsg == "REGISTER") {
+      return true;
+    }
+
+    return false;
+  }
+
+  void updateOrder() {
+
+  }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push는 Future를 반환합니다. Future는 선택 창에서
+    // Navigator.pop이 호출된 이후 완료될 것입니다.
+    // List<String> result = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => SearchingPage()),
+    // );
+
+    dynamic result = await Navigator.push(
+      context,
+      PageTransition(
+        curve: Curves.easeInOut,
+        duration: Duration(milliseconds: 600),
+        reverseDuration: Duration(milliseconds: 600),
+        type: PageTransitionType.bottomToTopJoined,
+        child: SearchingPage(startPlace: startPlace, goalPlace: ""),
+      ),
+    );
+
+    startPlaceLatLng = new LatLng(result[1][0][0], result[1][0][1]);
+    goalPlaceLatLng = new LatLng(result[1][1][0], result[1][1][1]);
+
+    setState(() {
+      startPlace = result[0][0];
+      goalPlace = result[0][1];
+    });
+    // 선택 창으로부터 결과 값을 받은 후, 이전에 있던 snackbar는 숨기고 새로운 결과 값을
+    // 보여줍니다.
   }
 }

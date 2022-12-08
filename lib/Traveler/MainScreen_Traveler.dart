@@ -1109,11 +1109,11 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
           //     + Provider.of<ReservationTimeSettingProvider>(context).department_mins.padLeft(2, '0') + '분',
           // TODO: 여기 바꿔야대 진짜 시간 넣기로
           "startTime" : {
-            "hour" :  "12",
-            "minute" : "12"
+            "hour" :  "10",
+            "minute" : "00"
           },
           "endTime" : {
-            "hour" :  "12",
+            "hour" :  "13",
             "minute" : "12"
           },
           "luggages" : [

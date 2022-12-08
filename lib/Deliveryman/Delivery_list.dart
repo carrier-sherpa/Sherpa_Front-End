@@ -20,9 +20,10 @@ class Delivery_List_Page extends StatefulWidget {
 class _Delivery_List_PageState extends State<Delivery_List_Page> {
 
   // static const rootUrl = "http://sherpa-env.eba-ptkbs2zc.ap-northeast-2.elasticbeanstalk.com";
-  String name = "";
-  String orderId = '';
-  String orderName = '';
+  var name = ['', '', '', '', '', ''];
+  var orderId = ['', '', '', '', '', ''];
+  var orderName = ['', '', '', '', '', ''];
+  var orderVisibility = [false, false, false, false, false, false];
 
   @override
   void initState() {
@@ -47,40 +48,86 @@ class _Delivery_List_PageState extends State<Delivery_List_Page> {
             padding: EdgeInsets.all(8.0),
             shrinkWrap: true,
             children: [
-              Container(
-                margin:
-                EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: SherpaColor.sherpa_main,
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.card_travel,
-                    size: 40.sp,
+              Visibility(
+                visible: orderVisibility[0],
+                child: Container(
+                  margin:
+                  EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: SherpaColor.sherpa_main,
                   ),
-                  title: Text(
-                    ' 원',
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.card_travel,
+                      size: 40.sp,
                     ),
+                    title: Text(
+                      ' 원',
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '(중) 짐 갯수 : ',
+                      style: TextStyle(fontSize: 10.sp),
+                    ),
+                    trailing: Icon(Icons.navigate_next),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => Accept_Info_page(str: '', luggageId: orderId[0],))
+                      );
+                    },
+                    textColor: Colors.white,
+                    iconColor: Colors.white,
                   ),
-                  subtitle: Text(
-                    '(중) 짐 갯수 : ',
-                    style: TextStyle(fontSize: 10.sp),
-                  ),
-                  trailing: Icon(Icons.navigate_next),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (context) => Accept_Info_page(str: '', luggageId: orderId,))
-                    );
-                  },
-                  textColor: Colors.white,
-                  iconColor: Colors.white,
                 ),
               ),
+
+              SizedBox(
+                height: 8.h,
+              ),
+
+              Visibility(
+                visible: orderVisibility[1],
+                child: Container(
+                  margin:
+                  EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: SherpaColor.sherpa_main,
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.card_travel,
+                      size: 40.sp,
+                    ),
+                    title: Text(
+                      ' 원',
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '(중) 짐 갯수 : ',
+                      style: TextStyle(fontSize: 10.sp),
+                    ),
+                    trailing: Icon(Icons.navigate_next),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => Accept_Info_page(str: '', luggageId: orderId[1],))
+                      );
+                    },
+                    textColor: Colors.white,
+                    iconColor: Colors.white,
+                  ),
+                ),
+              ),
+
               SizedBox(
                 height: 8.h,
               ),
@@ -116,9 +163,15 @@ class _Delivery_List_PageState extends State<Delivery_List_Page> {
 
     if(response.statusCode == 200) {
       var info = jsonDecode(response.body);
-      var order = info[0];
-      orderId = order['orderId'];
-      orderName = '원동연';
+
+      for(int i = 0; i < info.length; i++) {
+        var order = info[i];
+        orderId[i] = order['orderId'];
+        orderName[i] = "원동연님의 캐리어";
+        orderVisibility[i] = true;
+      }
+
+
       setState(() {
 
       });
