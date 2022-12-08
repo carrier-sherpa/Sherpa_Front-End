@@ -290,23 +290,20 @@ class _LoginFormState extends State<LoginForm> {
               backgroundColor: SherpaColor.sherpa_main,
 
               onPressed: () async {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                );
-                // bool response = await _signinRequest();
-                // if(response){
-                //   Navigator.pop(context);
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                //   );
-                // }
-                //
-                // else {
-                //   loginErrorMsg();
-                // }
+                // Navigator.pop(context);
+
+                bool response = await _signinRequest();
+                if(response){
+                  // Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
+                  );
+                }
+
+                else {
+                  loginErrorMsg();
+                }
 
 
 
