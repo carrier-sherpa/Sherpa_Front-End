@@ -63,21 +63,21 @@ class _Delivery_List_PageState extends State<Delivery_List_Page> {
                       size: 40.sp,
                     ),
                     title: Text(
-                      ' 원',
+                      '${orderName[0]}',
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     subtitle: Text(
-                      '(중) 짐 갯수 : ',
+                      '세부정보',
                       style: TextStyle(fontSize: 10.sp),
                     ),
                     trailing: Icon(Icons.navigate_next),
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(
-                              builder: (context) => Accept_Info_page(str: '', luggageId: orderId[0],))
+                              builder: (context) => Accept_Info_page(str: orderName[0], luggageId: orderId[0],))
                       );
                     },
                     textColor: Colors.white,
@@ -105,21 +105,21 @@ class _Delivery_List_PageState extends State<Delivery_List_Page> {
                       size: 40.sp,
                     ),
                     title: Text(
-                      ' 원',
+                      '${orderName[1]}',
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     subtitle: Text(
-                      '(중) 짐 갯수 : ',
+                      '세부정보',
                       style: TextStyle(fontSize: 10.sp),
                     ),
                     trailing: Icon(Icons.navigate_next),
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(
-                              builder: (context) => Accept_Info_page(str: '', luggageId: orderId[1],))
+                              builder: (context) => Accept_Info_page(str: orderName[1], luggageId: orderId[1],))
                       );
                     },
                     textColor: Colors.white,
@@ -151,7 +151,7 @@ class _Delivery_List_PageState extends State<Delivery_List_Page> {
   _getMyOrders() async {
 
 
-    final uri = Uri.parse("${Api.ROOTURL}/orders/memberId");
+    final uri = Uri.parse("${Api.ROOTURL}/orders/deliverId");
 
     http.Response response = await http.get(
       uri,

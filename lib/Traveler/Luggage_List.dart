@@ -20,9 +20,11 @@ class Luggage_List_Page extends StatefulWidget {
 
 class _Luggage_List_PageState extends State<Luggage_List_Page> {
 
-  String name = "";
-  String orderId = '';
-  String orderName = '';
+  var orderId = ["", "", "", "", "", ""];
+  var orderName = ["", "", "", "", "", ""];
+  var orderStatus = ["", "", "", "", "", ""];
+  var orderVisibility = [false, false, false, false, false, false];
+  var orderDay = ["", "", "", "", "", ""];
 
   @override
   void initState() {
@@ -51,42 +53,127 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
               SizedBox(
                 height: 8.h,
               ),
-              Container(
-                margin:
-                EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: SherpaColor.sherpa_main,
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.card_travel,
-                    size: 40.sp,
-                  ),
-                  title: Text(
-                    '내가 맡긴 짐',
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+              Visibility(
+                  child: Container(
+                    margin:
+                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: SherpaColor.sherpa_main,
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.card_travel,
+                        size: 40.sp,
+                      ),
+                      title: Text(
+                        '${orderDay[0]}에 맡긴 짐',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${orderStatus[0]}',
+                        style: TextStyle(fontSize: 10.sp),
+                      ),
+                      trailing: Icon(Icons.navigate_next),
+                      onTap: () {
+
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => Order_Info_page(str: '${orderDay[0]}에 맡긴 짐', luggageId: orderId[0],))
+                        );
+                        // showLuggageSetting(context);
+                      },
+                      textColor: Colors.white,
+                      iconColor: Colors.white,
                     ),
                   ),
-                  subtitle: Text(
-                    '세부 정보',
-                    style: TextStyle(fontSize: 10.sp),
-                  ),
-                  trailing: Icon(Icons.navigate_next),
-                  onTap: () {
-
-                    Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (context) => Order_Info_page(str: "내가 맡긴 짐", luggageId: orderId,))
-                    );
-                    // showLuggageSetting(context);
-                  },
-                  textColor: Colors.white,
-                  iconColor: Colors.white,
-                ),
               ),
+              SizedBox(
+                height: 8.h,
+              ),
+              Visibility(
+                  child: Container(
+                    margin:
+                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: SherpaColor.sherpa_main,
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.card_travel,
+                        size: 40.sp,
+                      ),
+                      title: Text(
+                        '${orderDay[1]}에 맡긴 짐',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${orderStatus[1]}',
+                        style: TextStyle(fontSize: 10.sp),
+                      ),
+                      trailing: Icon(Icons.navigate_next),
+                      onTap: () {
+
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => Order_Info_page(str: '${orderDay[1]}에 맡긴 짐', luggageId: orderId[1],))
+                        );
+                        // showLuggageSetting(context);
+                      },
+                      textColor: Colors.white,
+                      iconColor: Colors.white,
+                    ),
+                  ),
+              ),
+              SizedBox(
+                height: 8.h,
+              ),
+              Visibility(
+                  child: Container(
+                    margin:
+                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: SherpaColor.sherpa_main,
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.card_travel,
+                        size: 40.sp,
+                      ),
+                      title: Text(
+                        '${orderDay[2]}에 맡긴 짐',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${orderStatus[2]}',
+                        style: TextStyle(fontSize: 10.sp),
+                      ),
+                      trailing: Icon(Icons.navigate_next),
+                      onTap: () {
+
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => Order_Info_page(str: '${orderDay[2]}에 맡긴 짐', luggageId: orderId[2],))
+                        );
+                        // showLuggageSetting(context);
+                      },
+                      textColor: Colors.white,
+                      iconColor: Colors.white,
+                    ),
+                  ),
+              ),
+
               // Delivery_List_Tile(str: '${orderName}님의 캐리어', orderId: orderId),
               // Delivery_List_Tile(str: '원동연님의 캐리어', orderId: '',),
 
@@ -108,7 +195,7 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
   _getMyOrders() async {
 
 
-    final uri = Uri.parse("${Api.ROOTURL}/orders/memberId");
+    final uri = Uri.parse("${Api.ROOTURL}/orders/travelerId");
 
     http.Response response = await http.get(
       uri,
@@ -120,21 +207,37 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
 
     if(response.statusCode == 200) {
       var info = jsonDecode(response.body);
-      var order = info[0];
-      orderId = order['orderId'];
-      orderName = '원동연';
+      for(int i = 0; i < info.length; i++) {
+          var order = info[i];
+          orderId[i] = order['orderId'];
+          orderName[i] = '원동연';
+          orderDay[i] = order['orderDay'];
+          orderStatus[i] = _changeButtonByStatus(order["status"]);
+          orderVisibility[i] = true;
+      }
+
       setState(() {
 
       });
-      // info.forEach((order) => {
-      //   name = _getUsername(order['travelerId'])
-      // });
-      // addMarker(latLng, id)
       return true;
     }
     else {
       return false;
     }
 
+  }
+
+
+
+  String _changeButtonByStatus(status) {
+    if (status == "ACCEPT") {
+      return "배송 중";
+    } else if (status == "REGISTER") {
+      return "등록 완료";
+    } else if (status == "ARRIVE") {
+      return "배송 완료";
+    }
+
+    return "세부 정보";
   }
 }
