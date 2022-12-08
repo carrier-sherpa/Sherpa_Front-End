@@ -51,11 +51,11 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
 
   String startPlace = "";
   String goalPlace = "목적지";
-  String luggageName = "짐1";
-  String luggageId = "";
+  var luggageName = ["짐1", "짐2", "짐3", "짐4", "짐5", "짐6"];
+  var luggageId = ["", "", "", "", "", ""];
+  var orderVisibility = [false, false, false, false, false, false];
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
-  bool _orderVisiblity = false;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.5031798, 126.9572013),
@@ -386,7 +386,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                               shrinkWrap: true,
                               children: [
                                 Visibility(
-                                  visible: _orderVisiblity,
+                                  visible: orderVisibility[0],
                                     child: Container(
                                       margin:
                                       EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
@@ -400,7 +400,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                                           size: 40.sp,
                                         ),
                                         title: Text(
-                                          '$luggageName',
+                                          luggageName[0],
                                           style: TextStyle(
                                             fontSize: 20.sp,
                                             fontWeight: FontWeight.bold,
@@ -420,7 +420,57 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                                               reverseDuration:
                                               Duration(milliseconds: 100),
                                               type: PageTransitionType.fade,
-                                              child: Delivery_Info_page(str: "원동연님의 캐리어", luggageId: luggageId),
+                                              child: Delivery_Info_page(str: "원동연님의 캐리어", luggageId: luggageId[0]),
+                                              childCurrent: MainScreen_Deliveryman(),
+                                            ),
+                                          );
+                                          //showLuggageSetting(context);
+                                        },
+                                        textColor: Colors.white,
+                                        iconColor: Colors.white,
+                                      ),
+                                    ),
+                                ),
+
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Visibility(
+                                  visible: orderVisibility[1],
+                                    child: Container(
+                                      margin:
+                                      EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: SherpaColor.sherpa_sub,
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(
+                                          Icons.card_travel,
+                                          size: 40.sp,
+                                        ),
+                                        title: Text(
+                                          luggageName[1],
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          '세부 정보',
+                                          style: TextStyle(fontSize: 10.sp),
+                                        ),
+                                        trailing: Icon(Icons.navigate_next),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              curve: Curves.easeInOut,
+                                              duration: Duration(milliseconds: 100),
+                                              reverseDuration:
+                                              Duration(milliseconds: 100),
+                                              type: PageTransitionType.fade,
+                                              child: Delivery_Info_page(str: "원동연님의 캐리어", luggageId: luggageId[1]),
                                               childCurrent: MainScreen_Deliveryman(),
                                             ),
                                           );
@@ -668,10 +718,14 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
 
     if(response.statusCode == 200) {
       var info = jsonDecode(response.body);
-      var luggage = info[0];
-      luggageId = luggage['orderId'];
-      luggageName = "원동연님의 캐리어";
-      _orderVisiblity = true;
+
+      for(int i = 0; i < info.length; i++) {
+        var luggage = info[0];
+        luggageId[i] = luggage['orderId'];
+        luggageName[i] = "원동연님의 캐리어";
+        orderVisibility[i] = true;
+      }
+
 
       // info.forEach((luggage) => {
       //   if(luggage['status'] == "REGISTER"){
