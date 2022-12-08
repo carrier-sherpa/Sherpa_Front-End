@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sherpa/Deliveryman/Accept_Info_page.dart';
 import 'package:sherpa/Deliveryman/Delivery_Info_page.dart';
 
 class Delivery_List_Tile extends StatelessWidget {
   String str = '';
+  String orderId = '';
   Delivery_List_Tile({
     Key? key,
-    required this.str
+    required this.str,
+    required this.orderId
   }) : super(key: key);
 
 
@@ -19,7 +22,7 @@ class Delivery_List_Tile extends StatelessWidget {
             onTap: (){
               Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => Delivery_Info_page(str: str))
+                      builder: (context) => Accept_Info_page(str: str, luggageId: orderId,))
               );
             },
             child: Container(

@@ -278,17 +278,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                 ),
                                 onTap: () {
                                   _navigateAndDisplaySelection(context);
-                                  // Navigator.push(
-                                  //   context,
-                                  //   PageTransition(
-                                  //     curve: Curves.easeInOut,
-                                  //     duration: Duration(milliseconds: 600),
-                                  //     reverseDuration: Duration(milliseconds: 600),
-                                  //     type: PageTransitionType.bottomToTopJoined,
-                                  //     child: SearchingPage(),
-                                  //     childCurrent: MainScreen_Traveler(),
-                                  //   ),
-                                  // );
                                 },
                               ),
                             ],
@@ -336,17 +325,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                 ),
                                 onTap: () {
                                   _navigateAndDisplaySelection(context);
-                                  // Navigator.push(
-                                  //   context,
-                                  //   PageTransition(
-                                  //     curve: Curves.easeInOut,
-                                  //     duration: Duration(milliseconds: 600),
-                                  //     reverseDuration: Duration(milliseconds: 600),
-                                  //     type: PageTransitionType.bottomToTopJoined,
-                                  //     child: SearchingPage(),
-                                  //     childCurrent: MainScreen_Traveler(),
-                                  //   ),
-                                  // );
                                 },
                               ),
                             ],
@@ -831,91 +809,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             ),
             Column(
               children: [
-                /*Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        width: 300.w,
-                        height: 50.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0.sp, 1.0.sp), //(x,y)
-                              blurRadius: 2.0,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              icon: Icon(
-                                Icons.menu,
-                                size: 40.sp,
-                              ),
-                              onPressed: () {
-                                _drawerKey.currentState!.openDrawer();
-                              },
-                            ),
-                            GestureDetector(
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: Text(
-                                  '장소, 카페, 호텔 주소 검색',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 15.sp,
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    duration: Duration(milliseconds: 100),
-                                    reverseDuration:
-                                    Duration(milliseconds: 100),
-                                    type: PageTransitionType.fade,
-                                    child: SearchingPage(startPlace: "", goalPlace: ""),
-                                    childCurrent: MainScreen_Traveler(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 50.sp, 0, 0),
-                      child: IconButton(
-                        onPressed: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainScreen_Traveler())
-                          );
-                        },
-                        icon: Icon(
-                          Icons.directions_walk,
-                          size: 24.sp,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),*/
+
                 SizedBox(
                   height: 90.h,
                 ),
@@ -977,7 +871,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
 
   Future<bool> _getAllLuggage() async {
 
-    final url = Uri.parse("$rootUrl/luggage");
+    final url = Uri.parse("${Api.ROOTURL}/luggage");
 
     http.Response response = await http.get(
       url,
@@ -994,7 +888,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
     }
   }
 
-  static const rootUrl = "http://sherpabackend-env.eba-4pbe4v4v.ap-northeast-2.elasticbeanstalk.com";
+  // static const rootUrl = "http://sherpa-env.eba-ptkbs2zc.ap-northeast-2.elasticbeanstalk.com";
 
   Future<String> _getCurGeoCode(gps) async {
     final str = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${gps.latitude},${gps.longitude}&key=${Api.KEY}';
@@ -1161,71 +1055,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
         });
   }
 
-  void showReportForm() {
-    final List<String> _valueList = ['신고타입', '도난', '분실'];
-    String? _selectedValue = '신고타입';
-
-    showDialog(
-        context: context,
-        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            //Dialog Main Title
-            title: Column(
-              children: <Widget>[
-                Text("신고"),
-              ],
-            ),
-            //
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                DropdownButton(
-                  isExpanded: true,
-                  value: _selectedValue,
-                  items: _valueList.map((value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedValue = value;
-                      });
-                    }
-                ),
-                const SizedBox(
-                  height: 200,
-                  child: TextField(
-                    maxLines: 5,
-                  ),
-                )
-              ],
-            ),
-            actions: <Widget>[
-              new TextButton(
-                child: new Text("신고하기"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              new TextButton(
-                child: new Text("취소"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
-
   void completeOrder() {
     showDialog(
         context: context,
@@ -1292,7 +1121,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   }
 
   Future<void> sendOrderToServer(small, mid, big) async {
-    const str = '$rootUrl/orders';
+    String str = '${Api.ROOTURL}/orders';
     final url = Uri.parse(str);
 
     http.Response response = await http.post(

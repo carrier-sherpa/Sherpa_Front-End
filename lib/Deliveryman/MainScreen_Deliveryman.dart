@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sherpa/Deliveryman/Delivery_Info_page.dart';
 import 'package:sherpa/UI/Login_Page.dart';
 import 'package:sherpa/UI/Searching_Page.dart';
 import 'package:sherpa/UI/style.dart';
@@ -39,15 +40,18 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
   late GoogleMapController _controller;
 
 
-  static const rootUrl = "http://sherpabackend-env.eba-4pbe4v4v.ap-northeast-2.elasticbeanstalk.com";
+  static const rootUrl = "http://sherpa-env.eba-ptkbs2zc.ap-northeast-2.elasticbeanstalk.com";
   final List<Marker> markers = [];
 
   int price_small = 12000;
   int price_mid = 10000;
   int price_big = 5000;
+  TextEditingController luggageTextController = TextEditingController();
 
   String startPlace = "";
   String goalPlace = "목적지";
+  String luggageName = "짐1";
+  String luggageId = "";
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
 
@@ -374,7 +378,60 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                           SizedBox(
                             height: 10.h,
                           ),
-
+                          Container(
+                            width: double.infinity,
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                Container(
+                                  margin:
+                                  EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: SherpaColor.sherpa_sub,
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.card_travel,
+                                      size: 40.sp,
+                                    ),
+                                    title: Text(
+                                      '$luggageName',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      '세부 정보',
+                                      style: TextStyle(fontSize: 10.sp),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          curve: Curves.easeInOut,
+                                          duration: Duration(milliseconds: 100),
+                                          reverseDuration:
+                                          Duration(milliseconds: 100),
+                                          type: PageTransitionType.fade,
+                                          child: Delivery_Info_page(str: "원동연님의 캐리어", luggageId: luggageId),
+                                          childCurrent: MainScreen_Deliveryman(),
+                                        ),
+                                      );
+                                      //showLuggageSetting(context);
+                                    },
+                                    textColor: Colors.white,
+                                    iconColor: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -504,91 +561,6 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
             ),
             Column(
               children: [
-                /*Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        width: 300.w,
-                        height: 50.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0.sp, 1.0.sp), //(x,y)
-                              blurRadius: 2.0,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              icon: Icon(
-                                Icons.menu,
-                                size: 40.sp,
-                              ),
-                              onPressed: () {
-                                _drawerKey.currentState!.openDrawer();
-                              },
-                            ),
-                            GestureDetector(
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: Text(
-                                  '장소, 카페, 호텔 주소 검색',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 15.sp,
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    duration: Duration(milliseconds: 100),
-                                    reverseDuration:
-                                    Duration(milliseconds: 100),
-                                    type: PageTransitionType.fade,
-                                    child: SearchingPage(startPlace: "", goalPlace: ""),
-                                    childCurrent: MainScreen_Traveler(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 50.sp, 0, 0),
-                      child: IconButton(
-                        onPressed: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainScreen_Traveler())
-                          );
-                        },
-                        icon: Icon(
-                          Icons.directions_walk,
-                          size: 24.sp,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),*/
                 SizedBox(
                   height: 90.h,
                 ),
@@ -706,7 +678,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
   _drawAllLuggage() async {
 
 
-    final uri = Uri.parse("$rootUrl/orders/distance").replace(queryParameters: {
+    final uri = Uri.parse("${Api.ROOTURL}/orders/distance").replace(queryParameters: {
       'startLat': '${startPlaceLatLng.latitude}',
       'startLng': '${startPlaceLatLng.longitude}',
       'endLat': '${goalPlaceLatLng.latitude}',
@@ -723,12 +695,19 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
 
     if(response.statusCode == 200) {
       var info = jsonDecode(response.body);
-      info.forEach((luggage) => {
-        if(luggage['status'] == "REGISTER"){
-          addOrderMarker(LatLng(luggage['start']['lat'], luggage['start']['lng']), luggage['orderId'])
-        }
-      });
+      var luggage = info[0];
+      luggageId = luggage['orderId'];
+      luggageName = "원동연님의 캐리어";
+
+      // info.forEach((luggage) => {
+      //   if(luggage['status'] == "REGISTER"){
+      //     addOrderMarker(LatLng(luggage['start']['lat'], luggage['start']['lng']), luggage['orderId'])
+      //   }
+      // });
       // addMarker(latLng, id)
+      setState(() {
+
+      });
       return true;
     }
     else {
@@ -736,6 +715,8 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
     }
 
   }
+
+
 
   addMarker(latLng, id) {
 
@@ -768,7 +749,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
   }
 
   Future<dynamic> findOrderById(id) async {
-    final uri = Uri.parse("$rootUrl/orders/orderId/$id");
+    final uri = Uri.parse("${Api.ROOTURL}/orders/orderId/$id");
     List<String> luggage = ["",""];
 
     http.Response response = await http.get(
@@ -873,7 +854,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
   }
 
   confirmOrder(id) async {
-    final uri = Uri.parse("$rootUrl/orders/$id");
+    final uri = Uri.parse("${Api.ROOTURL}/orders/acceptOrder/$id");
 
     http.Response response = await http.post(
       uri,

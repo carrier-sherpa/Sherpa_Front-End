@@ -42,7 +42,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  static const rootUrl = "http://sherpabackend-env.eba-4pbe4v4v.ap-northeast-2.elasticbeanstalk.com/members";
+  // static const rootUrl = "http://sherpa-env.eba-ptkbs2zc.ap-northeast-2.elasticbeanstalk.com/members";
   String email = "";
   String password = "";
   String userInfo = "";
@@ -56,7 +56,7 @@ class _LoginFormState extends State<LoginForm> {
     email = emailController.text;
     password = passwordController.text;
 
-    final url = Uri.parse("$rootUrl/signup");
+    final url = Uri.parse("${Api.ROOTURL}/members/signup");
 
     http.Response response = await http.post(
       url,
@@ -79,13 +79,11 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  bool _signinRequest()  {
+  Future<bool> _signinRequest()  async {
     email = emailController.text;
     password = passwordController.text;
 
-    return true;
-
-    /*final url = Uri.parse("$rootUrl/signin");
+    final url = Uri.parse("${Api.ROOTURL}/members/signin");
 
     http.Response response = await http.post(
       url,
@@ -106,7 +104,7 @@ class _LoginFormState extends State<LoginForm> {
     }
     else {
       return false;
-    }*/
+    }
   }
 
 
@@ -292,18 +290,23 @@ class _LoginFormState extends State<LoginForm> {
               backgroundColor: SherpaColor.sherpa_main,
 
               onPressed: () async {
-                bool response = await _signinRequest();
-                if(response){
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
-                  );
-                }
-
-                else {
-                  loginErrorMsg();
-                }
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
+                );
+                // bool response = await _signinRequest();
+                // if(response){
+                //   Navigator.pop(context);
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(builder: (context) => MainScreen_Traveler()),
+                //   );
+                // }
+                //
+                // else {
+                //   loginErrorMsg();
+                // }
 
 
 

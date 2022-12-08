@@ -7,20 +7,20 @@ import 'package:sherpa/key.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class Delivery_Info_page extends StatefulWidget {
+class Accept_Info_page extends StatefulWidget {
   String str = '';
   String luggageId = '';
-  Delivery_Info_page({
+  Accept_Info_page({
     Key? key,
     required this.str,
     required this.luggageId
   }) : super(key: key);
 
   @override
-  State<Delivery_Info_page> createState() => _Delivery_Info_pageState(luggageId);
+  State<Accept_Info_page> createState() => _Accept_Info_pageState(luggageId);
 }
 
-class _Delivery_Info_pageState extends State<Delivery_Info_page> {
+class _Accept_Info_pageState extends State<Accept_Info_page> {
   // static const rootUrl = "http://sherpa-env.eba-ptkbs2zc.ap-northeast-2.elasticbeanstalk.com";
 
   String startTime = '';
@@ -29,7 +29,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
   late GoogleMapController _controller;
   String luggageId = '';
 
-  _Delivery_Info_pageState(this.luggageId);
+  _Accept_Info_pageState(this.luggageId);
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.5031798, 126.9572013),
@@ -84,19 +84,18 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                 children: [
                   Text('출발: ' + '$endTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
-                        fontSize: 32.sp,
-                        color: Colors.red,
+                      fontSize: 32.sp,
+                      color: Colors.red,
                     ),
                   ),
                   Text('도착: ' + '$startTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
-                        fontSize: 32.sp,
+                      fontSize: 32.sp,
                       color: Colors.blue,
                     ),
                   ),
                 ],
               ),
-
               SizedBox(
                 height: 20.h,
               ),
@@ -133,6 +132,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                   ),
                 ],
               ),
+
               SizedBox(
                 height: 30.h,
               ),
@@ -141,9 +141,10 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                 children: [
                   ElevatedButton(
                     child: Text(
-                      '취소'
+                      '배송취소'
                     ),
                     onPressed: (){
+                      cancelOrder();
                       //TODO travel_energy 감소해야함.
                       Navigator.pop(context);
                     },
@@ -157,10 +158,10 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                   ),
                   ElevatedButton(
                     child: Text(
-                        '배송하기'
+                        '배송완료'
                     ),
                     onPressed: (){
-                      acceptLuggage();
+                      endOrder();
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -171,7 +172,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                               ),
                               title: Column(
                                 children: [
-                                  Text("배송을 시작합니다!",
+                                  Text("배송을 완료했습니다!",
                                     style: TextStyle(
                                       fontSize: 24.sp,
                                     ),
@@ -185,7 +186,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "원동연님의 짐을 배송합니다!",   //TODO 깜찍이를 유저 닉네임으로 고쳐야합니다.
+                                      "원동연님의 짐을 배송완료 했습니다!",   //TODO 깜찍이를 유저 닉네임으로 고쳐야합니다.
                                       style: TextStyle(
                                       fontSize: 20.sp,
                                      ),
@@ -197,9 +198,8 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
                                 ElevatedButton(
                                   child: Text("확인"),
                                   onPressed: () {
-
                                     Navigator.pop(context);
-                                    // Navigator.pop(context);
+                                    Navigator.pop(context);
                                     Navigator.pop(context);
                                     // Navigator.of(context).popUntil((route) => route.isFirst);
                                   },
@@ -341,10 +341,26 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
     });
   }
 
-  acceptLuggage() async {
-    final uri = Uri.parse("${Api.ROOTURL}/orders/acceptOrder/$luggageId");
+  cancelOrder() async {
+    final uri = Uri.parse("${Api.ROOTURL}/orders/closeOrder/$luggageId");
 
-    http.Response response = await http.post(
+    http.Response response = await http.patch(
+      uri,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+        'Cookie' : '${Api.JSESSIONID}'
+      },
+    );
+
+    if(response.statusCode != 200) {
+      print('짐 수락 실패..');
+    }
+  }
+
+  endOrder() async {
+    final uri = Uri.parse("${Api.ROOTURL}/orders/endOrder/$luggageId");
+
+    http.Response response = await http.patch(
       uri,
       headers: <String, String> {
         'Content-Type': 'application/json',
