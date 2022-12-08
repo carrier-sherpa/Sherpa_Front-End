@@ -8,12 +8,21 @@ import 'package:sherpa/UI/style.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:sherpa/key.dart';
+import 'package:sherpa/provider/luggagesetting_provider.dart';
 
 
 class SearchingPage extends StatefulWidget {
-  const SearchingPage({Key? key, required this.startPlace, required this. goalPlace}) : super(key: key);
-  final startPlace;
-  final goalPlace;
+  SearchingPage({
+    Key? key,
+    required this.startPlace,
+    required this.goalPlace,
+    required this.detailStartAddress,
+    required this.detailGoalAddress,
+  }) : super(key: key);
+  var startPlace;
+  var goalPlace;
+  String detailStartAddress;
+  String detailGoalAddress;
 
   @override
   State<SearchingPage> createState() => _SearchingPageState();
@@ -24,6 +33,8 @@ class _SearchingPageState extends State<SearchingPage> {
   List<String> placeIdTexts = ["","","","",""];
   List<String> places = ["",""];
   List<String> placeIds = ["",""];
+  String detailStartAddress ='';
+  String detailGoalAddress ='';
   String startPlaceId = "";
   String goalPlaceId = "";
   bool curStartInput = true;
@@ -47,68 +58,16 @@ class _SearchingPageState extends State<SearchingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       body: Column(
         children: [
           Container(
             width: double.infinity,
-            height: 300.h,
+            height: 360.h,
             child: Center(
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(20.sp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 100.w,
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: SherpaColor.sherpa_sub,
-                              border: Border.all(
-                                color: Colors.white30,
-                              ),
-                              borderRadius: BorderRadius.circular(90),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(0.0.sp, 1.0.sp), //(x,y)
-                                  blurRadius: 2.0,
-                                ),
-                              ],
-                            ),
-                            child: Text(
-                              '짐 설정하기',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-
-                          onTap: () async {
-                            places[0] = startTextController.text.toString();
-                            places[1] = goalTextController.text.toString();
-                            dynamic placeInfo = [places, await getPlaceLatLng(placeIds)];
-                            Navigator.pop(context, placeInfo);
-                          },
-                          /*
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ));
-                            },
-                            */
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 3.h,
-                  ),
+                 SizedBox(height: 48.h,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -121,10 +80,46 @@ class _SearchingPageState extends State<SearchingPage> {
                           ),
                         ),
                       ),
+                      SizedBox(width: 20.w,),
+                      GestureDetector(
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 100.w,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            color: SherpaColor.sherpa_sub,
+                            border: Border.all(
+                              color: Colors.white30,
+                            ),
+                            borderRadius: BorderRadius.circular(90),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(0.0.sp, 1.0.sp), //(x,y)
+                                blurRadius: 2.0,
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            '짐 설정하기',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        onTap: () async {
+                          places[0] = startTextController.text.toString();
+                          places[1] = goalTextController.text.toString();
+                          dynamic placeInfo = [places, await getPlaceLatLng(placeIds)];
+                          Navigator.pop(context, placeInfo);
+                        },
+                      ),
                     ],
                   ),
                   SizedBox(
-                    height: 40.h,
+                    height: 20.h,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -137,11 +132,9 @@ class _SearchingPageState extends State<SearchingPage> {
                       SizedBox(width: 15.w),
                       GestureDetector(
                         child: Container(
-                          height: 30.h,
+                          height: 36.h,
                           width: 300.w,
                           alignment: Alignment.center,
-
-                          //color: Colors.amber,
                           child: Flexible(
                             child: TextField(
                               controller: startTextController,
@@ -156,33 +149,17 @@ class _SearchingPageState extends State<SearchingPage> {
                                 // curStartInput = true;
                                 _getAutocompletePlaces(startTextController.text.toString());
                               },
-
                               onTap: (){
                                 curStartInput = true;
                               },
-
                             ),
                           ),
                         ),
-                        // onTap: () {
-                        //   Navigator.push(
-                        //     context,
-                        //     PageTransition(
-                        //       curve: Curves.easeInOut,
-                        //       duration: Duration(milliseconds: 600),
-                        //       reverseDuration: Duration(milliseconds: 600),
-                        //       type: PageTransitionType.bottomToTopJoined,
-                        //       child: SearchingPage(),
-                        //       childCurrent: MainScreen_Traveler(),
-                        //     ),
-                        //   );
-                        // },
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
+
+                  SizedBox(height: 16.h,),
                   Container(
                     height: 1.h,
                     width: 350.w,
@@ -212,7 +189,7 @@ class _SearchingPageState extends State<SearchingPage> {
 
                       GestureDetector(
                         child: Container(
-                            height: 30.h,
+                            height: 36.h,
                             width: 300.w,
                           alignment: Alignment.center,
                           //color: Colors.amber,
@@ -230,40 +207,12 @@ class _SearchingPageState extends State<SearchingPage> {
                                 curStartInput = false;
                               },
                             ),
-                          )
-
-
-                          // child:new Flexible(
-                          //   child: new TextField(
-                          //     // decoration: const InputDecoration(helperText: "어디로 짐을 보내실건가요"),
-                          //     style: TextStyle(
-                          //       fontSize: 20.sp,
-                          //     ),
-                          //     onChanged: (input){
-                          //       _getAutocompletePlaces(input);
-                          //     },
-                          //   ),
-                          // ),
+                          ),
                         ),
-                        // onTap: () {
-                        //   Navigator.push(
-                        //     context,
-                        //     PageTransition(
-                        //       curve: Curves.easeInOut,
-                        //       duration: Duration(milliseconds: 600),
-                        //       reverseDuration: Duration(milliseconds: 600),
-                        //       type: PageTransitionType.bottomToTopJoined,
-                        //       child: SearchingPage(),
-                        //       childCurrent: MainScreen_Traveler(),
-                        //     ),
-                        //   );
-                        // },
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
+                  SizedBox(height: 16.h,),
                 ],
               ),
             ),

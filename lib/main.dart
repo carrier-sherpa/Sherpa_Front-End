@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:sherpa/UI/Login_Page.dart';
-import 'package:sherpa/Traveler/MainScreen_Traveler.dart';
 import 'package:sherpa/UI/style.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'provider/luggagesetting_provider.dart';
 import 'package:sherpa/provider/ReservationTimeSetting_Provider.dart';
-import 'package:sherpa/provider/luggagesetting_provider.dart';
-
 
 
 void main() {

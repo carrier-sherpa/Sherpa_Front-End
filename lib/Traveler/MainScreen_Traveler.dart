@@ -51,10 +51,16 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
     zoom: 14.4746,
   );
 
+  String userName = '원동연';
   String startPlace = "";
   String goalPlace = "목적지";
+  String detailStartAddress = '';
+  String detailGoalAddress = '';
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
+  TextEditingController _textController = TextEditingController();
+  TextEditingController _detailStartTextController = TextEditingController();
+  TextEditingController _detailGoalTextController = TextEditingController();
 
   bool startTerminal = false;
 
@@ -71,21 +77,18 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
                 // 현재 계정 이미지 set
-                //backgroundImage: AssetImage('assets/profile.png'), //유저 프로필 사진 넣기
+                backgroundImage: AssetImage('assets/images/profile.png'), //유저 프로필 사진 넣기
                 backgroundColor: Colors.white,
               ),
               otherAccountsPictures: <Widget>[
                 // 다른 계정 이미지[] set
                 CircleAvatar(
                   backgroundColor: Colors.white,
-                  //backgroundImage: AssetImage('사진 추가해야함'), //유저 프로필 사진 추가
+                  backgroundImage: AssetImage('assets/images/traveler.png'), //유저 프로필 사진 추가
                 ),
               ],
-              accountName: Text('유저 이름 넣기'), //유저이름 넣기
-              accountEmail: Text('유저 이메일 주소 넣기'), //유저 이메일 주소 넣기
-              onDetailsPressed: () {
-                print('arrow is clicked');
-              },
+              accountName: Text(userName), //유저이름 넣기
+              accountEmail: Text('wonddang99@naver.com'), //유저 이메일 주소 넣기
               decoration: BoxDecoration(
                   color: SherpaColor.sherpa_main,
                   borderRadius: BorderRadius.only(
@@ -94,36 +97,49 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             ),
             ListTile(
               leading: Icon(
-                Icons.home,
+                Icons.shopping_bag,
                 color: Colors.grey[850],
               ),
-              title: Text('Home'),
+              title: Text('내가 맡긴 짐'),
               onTap: () {
-                print('Home is clicked');
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => Luggage_List_Page())
+                );
               },
-              trailing: Icon(Icons.add),
+              trailing: Icon(Icons.arrow_forward_ios),
             ),
             ListTile(
               leading: Icon(
                 Icons.settings,
                 color: Colors.grey[850],
               ),
-              title: Text('Setting'),
+              title: Text('닉네임 변경'),
               onTap: () {
-                print('Setting is clicked');
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('닉네임 변경'),
+                    content: TextField(
+                      controller: _textController,
+                      onSubmitted: (text){
+                        userName = _textController.text;
+                      },
+                    ),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              userName = _textController.text;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('수정 완료')),
+                    ],
+                  ),
+                );
               },
-              trailing: Icon(Icons.add),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.question_answer,
-                color: Colors.grey[850],
-              ),
-              title: Text('Q&A'),
-              onTap: () {
-                print('Q&A is clicked');
-              },
-              trailing: Icon(Icons.add),
+              trailing: Icon(Icons.arrow_forward_ios),
             ),
           ],
         ),
@@ -132,19 +148,10 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
         padding: EdgeInsets.all(0),
         child: Stack(
           children: [
-            // Container(
-            //   width: double.infinity,
-            //   height: double.infinity,
-            //   child: GoogleMap(
-            //     mapType: MapType.normal,
-            //     initialCameraPosition: _kGooglePlex,
-            //   ),
-            // ),
-
             SlidingUpPanel(
               //여행객 설정 화면
               minHeight: 64.sp,
-              maxHeight: 760.sp,
+              maxHeight: 640.sp,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(24.0),
                 topRight: Radius.circular(24.0),
@@ -169,7 +176,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                   ),
                 ),
                 child: Center(
-
                   child: Column(
                     children: [
                       // 이게 내가 추가한 부분(호ㅏ면이 깨져서 주석 처리)
@@ -218,478 +224,567 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                   ),
                 ),
               ),
-              panel: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    child: Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          Container(
-                            width: 64.w,
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(90),
+              panel: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: Center(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 16.h,
                             ),
-                          ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(30.sp, 0, 0, 0),
-                                child: Text(
-                                  '어디로 짐을 보내실건가요?',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            Container(
+                              width: 64.w,
+                              height: 4.h,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(90),
                               ),
-                              SizedBox(
-                                width: 20.w,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 32.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(width: 20.w),
-                              Icon(
-                                Icons.directions_walk,
-                                color: SherpaColor.sherpa_main,
-                              ),
-                              SizedBox(width: 15.w),
-                              GestureDetector(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  //color: Colors.amber,
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(30.sp, 0, 0, 0),
                                   child: Text(
-                                    '${startPlace}',
+                                    '어디로 짐을 보내실건가요?',
                                     style: TextStyle(
-                                      fontSize: 15.sp,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                onTap: () {
-                                  _navigateAndDisplaySelection(context);
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Container(
-                            height: 1.h,
-                            width: 350.w,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: FractionalOffset(0.0, 0.0),
-                                end: FractionalOffset(1.0, 0.0),
-                                colors: <Color>[
-                                  Color.fromRGBO(161, 196, 253, 100),
-                                  Color.fromRGBO(252, 195, 195, 100),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(width: 20.w),
-                              Icon(
-                                Icons.flag,
-                                color: Color.fromRGBO(252, 119, 119, 100),
-                              ),
-                              SizedBox(width: 15.w),
-                              GestureDetector(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  //color: Colors.amber,
-                                  child: Text(
-                                    '${goalPlace}',
-                                    style: TextStyle(
-                                      fontSize: 15.sp,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  _navigateAndDisplaySelection(context);
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 24.h,
-                          ),
-                          Container(
-                            height: 4.h,
-                            width: double.infinity,
-                            color: Colors.black12,
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-
-                          // 짐 설정 버튼, 문구, 선택된 화면을 포함하는 Container
-                          Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 20.w,
-                                      ),
-                                      Text(
-                                        '설정하신 짐',
-                                        style: TextStyle(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 160.w,
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 SizedBox(
-                                  height: 8.h,
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    children: [
-                                      Container(
-                                        margin:
-                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: SherpaColor.sherpa_sub,
-                                        ),
-                                        child: ListTile(
-                                          leading: Icon(
-                                            Icons.card_travel,
-                                            size: 40.sp,
-                                          ),
-                                          title: Text(
-                                            '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000} 원',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            '(소) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).small_luggage_num}',
-                                            style: TextStyle(fontSize: 10.sp),
-                                          ),
-                                          trailing: Icon(Icons.navigate_next),
-                                          onTap: () {
-                                            showLuggageSetting(context);
-                                          },
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                      Container(
-                                        margin:
-                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: SherpaColor.sherpa_main,
-                                        ),
-                                        child: ListTile(
-                                          leading: Icon(
-                                            Icons.card_travel,
-                                            size: 40.sp,
-                                          ),
-                                          title: Text(
-                                            '${Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000} 원',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            '(중) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).mid_luggage_num}',
-                                            style: TextStyle(fontSize: 10.sp),
-                                          ),
-                                          trailing: Icon(Icons.navigate_next),
-                                          onTap: () {
-                                            showLuggageSetting(context);
-                                          },
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                      Container(
-                                        margin:
-                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: SherpaColor.sherpa_red,
-                                        ),
-                                        child: ListTile(
-                                          leading: Icon(
-                                            Icons.card_travel,
-                                            size: 40.sp,
-                                          ),
-                                          title: Text(
-                                            '${Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000} 원',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            '(대) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).big_luggage_num}',
-                                            style: TextStyle(fontSize: 10.sp),
-                                          ),
-                                          trailing: Icon(Icons.navigate_next),
-                                          onTap: () {
-                                            showLuggageSetting(context);
-                                          },
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                    ],
-                                  ),
+                                  width: 20.w,
                                 ),
                               ],
                             ),
-                          ),
-
-                          Container(
-                            height: 4.h,
-                            width: double.infinity,
-                            color: Colors.black12,
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-
-                          // 시간 설정 버튼, 문구, 선택된 화면을 포함하는 Container
-                          Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 20.w,
-                                      ),
-                                      Text(
-                                        '예약시간을 설정해주세요',
-                                        style: TextStyle(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                    // 문구 Row 끝
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 4.h,
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    children: [
-                                      Container(
-                                        margin:
-                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: SherpaColor.sherpa_sub,
-                                        ),
-                                        child: ListTile(
-                                          leading: Icon(
-                                            Icons.directions_walk,
-                                            size: 32.sp,
-                                          ),
-                                          title: Text(
-                                            '출발시간:    ' +
-                                                Provider.of<ReservationTimeSettingProvider>(context).department_hours.padLeft(2, '0') + '시'
-                                                + Provider.of<ReservationTimeSettingProvider>(context).department_mins.padLeft(2, '0') + '분',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          trailing: Icon(Icons.navigate_next),
-                                          onTap: () {
-                                            showReservationTimeSetting(context);
-                                          },
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                      Container(
-                                        margin:
-                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: SherpaColor.sherpa_red,
-                                        ),
-                                        child: ListTile(
-                                          leading: Icon(
-                                            Icons.flag,
-                                            size: 32.sp,
-                                          ),
-                                          title: Text(
-                                            '도착시간:    ' +
-                                                Provider.of<ReservationTimeSettingProvider>(context).arrive_hours.padLeft(2, '0') + '시'
-                                                + Provider.of<ReservationTimeSettingProvider>(context).arrive_mins.padLeft(2, '0') + '분',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          trailing: Icon(Icons.navigate_next),
-                                          onTap: () {
-                                            showReservationTimeSetting(context);
-                                          },
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            SizedBox(
+                              height: 32.h,
                             ),
-                          ),
-
-                          SizedBox(
-                            height: 12.h,
-                          ),
-
-                          Container(
-                            child: Row(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SizedBox(width: 16.w,),
-                                Text(
-                                  '총 금액: ',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                SizedBox(width: 20.w),
+                                Icon(
+                                  Icons.directions_walk,
+                                  color: SherpaColor.sherpa_main,
                                 ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Container(
-                                  child: Image.asset(
-                                    'assets/images/won.png',
-                                    height: 20.h,
-                                    width: 20.w,
-                                    color: SherpaColor.sherpa_main,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000 + Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000 + Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-
-                                SizedBox(
-                                  width: 80.w,
-                                ),
-
+                                SizedBox(width: 36.w),
                                 GestureDetector(
                                   child: Container(
                                     alignment: Alignment.center,
-                                    width: 100.w,
-                                    height: 50.h,
-                                    decoration: BoxDecoration(
-                                      color: SherpaColor.sherpa_main,
-                                      border: Border.all(
-                                        color: Colors.white30,
-                                      ),
-                                      borderRadius: BorderRadius.circular(60),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          offset: Offset(0.0.sp, 1.0.sp), //(x,y)
-                                          blurRadius: 2.0,
-                                        ),
-                                      ],
-                                    ),
+                                    //color: Colors.amber,
                                     child: Text(
-                                      '예약하기',
+                                      '${startPlace}',
                                       style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.white,
+                                        fontSize: 15.sp,
                                       ),
                                     ),
                                   ),
                                   onTap: () {
-                                    int smallNum = Provider.of<LuggageSettingProvider>(context, listen: false).small_luggage_num;
-                                    int midNum = Provider.of<LuggageSettingProvider>(context, listen: false).mid_luggage_num;
-                                    int bigNum = Provider.of<LuggageSettingProvider>(context, listen: false).big_luggage_num;
-                                    createOrder(smallNum, midNum, bigNum);
-                                    // Navigator.push(
-                                    //   context,
-                                    //   PageTransition(
-                                    //     curve: Curves.easeInOut,
-                                    //     duration: Duration(milliseconds: 100),
-                                    //     reverseDuration:
-                                    //     Duration(milliseconds: 100),
-                                    //     type: PageTransitionType.fade,
-                                    //     child: DecideReservationPage(),
-                                    //     childCurrent: MainScreen_Traveler(),
-                                    //   ),
-                                    // );
+                                    _navigateAndDisplaySelection(context);
                                   },
                                 ),
-
                               ],
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Text('세부 주소: '),
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 36.h,
+                                    width: 270.w,
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      child: TextField(
+                                        controller: _detailStartTextController,
+                                        decoration: InputDecoration(
+                                          hintText: '출발지의 세부 주소를 입력해주세요',
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                        ),
+                                        onChanged: (text) {
+                                          detailStartAddress = _detailStartTextController.text;
+                                          Provider.of<LuggageSettingProvider>(context, listen: false).detailStartAddress = detailStartAddress;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            Container(
+                              height: 1.h,
+                              width: 350.w,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: FractionalOffset(0.0, 0.0),
+                                  end: FractionalOffset(1.0, 0.0),
+                                  colors: <Color>[
+                                    Color.fromRGBO(161, 196, 253, 100),
+                                    Color.fromRGBO(252, 195, 195, 100),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(width: 20.w),
+                                Icon(
+                                  Icons.flag,
+                                  color: Color.fromRGBO(252, 119, 119, 100),
+                                ),
+                                SizedBox(width: 36.w),
+                                GestureDetector(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    //color: Colors.amber,
+                                    child: Text(
+                                      '${goalPlace}',
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    _navigateAndDisplaySelection(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Text('세부 주소: '),
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 36.h,
+                                    width: 270.w,
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      child: TextField(
+                                        controller: _detailGoalTextController,
+                                        decoration: InputDecoration(
+                                          hintText: '목적지의 세부 주소를 입력해주세요',
+
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                        ),
+                                        onChanged: (text) {
+                                          detailGoalAddress = _detailGoalTextController.text;
+                                          Provider.of<LuggageSettingProvider>(context, listen:false).detailGoalAddress = detailGoalAddress;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+
+                            Container(
+                              height: 4.h,
+                              width: double.infinity,
+                              color: Colors.black12,
+                            ),
+
+                            SizedBox(
+                              height: 8.h,
+                            ),
+
+                            // 짐 설정 버튼, 문구, 선택된 화면을 포함하는 Container
+                            Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                        ),
+                                        Text(
+                                          '설정하신 짐',
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 160.w,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children: [
+                                        Container(
+                                          margin:
+                                          EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: SherpaColor.sherpa_sub,
+                                          ),
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.card_travel,
+                                              size: 40.sp,
+                                            ),
+                                            title: Text(
+                                              '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000} 원',
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            subtitle: Text(
+                                              '(소) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).small_luggage_num}',
+                                              style: TextStyle(fontSize: 10.sp),
+                                            ),
+                                            trailing: Icon(Icons.navigate_next),
+                                            onTap: () {
+                                              showLuggageSetting(context);
+                                            },
+                                            textColor: Colors.white,
+                                            iconColor: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.h,
+                                        ),
+                                        Container(
+                                          margin:
+                                          EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: SherpaColor.sherpa_main,
+                                          ),
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.card_travel,
+                                              size: 40.sp,
+                                            ),
+                                            title: Text(
+                                              '${Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000} 원',
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            subtitle: Text(
+                                              '(중) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).mid_luggage_num}',
+                                              style: TextStyle(fontSize: 10.sp),
+                                            ),
+                                            trailing: Icon(Icons.navigate_next),
+                                            onTap: () {
+                                              showLuggageSetting(context);
+                                            },
+                                            textColor: Colors.white,
+                                            iconColor: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.h,
+                                        ),
+                                        Container(
+                                          margin:
+                                          EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: SherpaColor.sherpa_red,
+                                          ),
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.card_travel,
+                                              size: 40.sp,
+                                            ),
+                                            title: Text(
+                                              '${Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000} 원',
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            subtitle: Text(
+                                              '(대) 짐 갯수 : ${Provider.of<LuggageSettingProvider>(context).big_luggage_num}',
+                                              style: TextStyle(fontSize: 10.sp),
+                                            ),
+                                            trailing: Icon(Icons.navigate_next),
+                                            onTap: () {
+                                              showLuggageSetting(context);
+                                            },
+                                            textColor: Colors.white,
+                                            iconColor: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.h,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              height: 4.h,
+                              width: double.infinity,
+                              color: Colors.black12,
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+
+                            // 시간 설정 버튼, 문구, 선택된 화면을 포함하는 Container
+                            Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                        ),
+                                        Text(
+                                          '예약시간을 설정해주세요',
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                      // 문구 Row 끝
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 4.h,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children: [
+                                        Container(
+                                          margin:
+                                          EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: SherpaColor.sherpa_sub,
+                                          ),
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.directions_walk,
+                                              size: 32.sp,
+                                            ),
+                                            title: Text(
+                                              '출발시간:    ' +
+                                                  Provider.of<ReservationTimeSettingProvider>(context).department_hours.padLeft(2, '0') + '시'
+                                                  + Provider.of<ReservationTimeSettingProvider>(context).department_mins.padLeft(2, '0') + '분',
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            trailing: Icon(Icons.navigate_next),
+                                            onTap: () {
+                                              showReservationTimeSetting(context);
+                                            },
+                                            textColor: Colors.white,
+                                            iconColor: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.h,
+                                        ),
+                                        Container(
+                                          margin:
+                                          EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: SherpaColor.sherpa_red,
+                                          ),
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.flag,
+                                              size: 32.sp,
+                                            ),
+                                            title: Text(
+                                              '도착시간:    ' +
+                                                  Provider.of<ReservationTimeSettingProvider>(context).arrive_hours.padLeft(2, '0') + '시'
+                                                  + Provider.of<ReservationTimeSettingProvider>(context).arrive_mins.padLeft(2, '0') + '분',
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            trailing: Icon(Icons.navigate_next),
+                                            onTap: () {
+                                              showReservationTimeSetting(context);
+                                            },
+                                            textColor: Colors.white,
+                                            iconColor: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.h,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 4.h,
+                            ),
+
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(width: 16.w,),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '총 금액: ',
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Container(
+                                        child: Image.asset(
+                                          'assets/images/won.png',
+                                          height: 20.h,
+                                          width: 20.w,
+                                          color: SherpaColor.sherpa_main,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        '${Provider.of<LuggageSettingProvider>(context).small_luggage_num * 3000 + Provider.of<LuggageSettingProvider>(context).mid_luggage_num * 4000 + Provider.of<LuggageSettingProvider>(context).big_luggage_num * 5000}',
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 8.w,
+                                  ),
+
+                                  GestureDetector(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 100.w,
+                                      height: 50.h,
+                                      decoration: BoxDecoration(
+                                        color: SherpaColor.sherpa_main,
+                                        border: Border.all(
+                                          color: Colors.white30,
+                                        ),
+                                        borderRadius: BorderRadius.circular(60),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            offset: Offset(0.0.sp, 1.0.sp), //(x,y)
+                                            blurRadius: 2.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        '예약하기',
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      int smallNum = Provider.of<LuggageSettingProvider>(context, listen: false).small_luggage_num;
+                                      int midNum = Provider.of<LuggageSettingProvider>(context, listen: false).mid_luggage_num;
+                                      int bigNum = Provider.of<LuggageSettingProvider>(context, listen: false).big_luggage_num;
+                                      if(smallNum == 0 && midNum ==0 && bigNum ==0){
+                                        createOrder(smallNum, midNum, bigNum);
+                                      }
+                                      else{
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MainScreen_Traveler())
+                                        );
+                                        createOrder(smallNum, midNum, bigNum);
+                                      }
+
+                                      // Navigator.push(
+                                      //   context,
+                                      //   PageTransition(
+                                      //     curve: Curves.easeInOut,
+                                      //     duration: Duration(milliseconds: 100),
+                                      //     reverseDuration:
+                                      //     Duration(milliseconds: 100),
+                                      //     type: PageTransitionType.fade,
+                                      //     child: DecideReservationPage(),
+                                      //     childCurrent: MainScreen_Traveler(),
+                                      //   ),
+                                      // );
+                                    },
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               body: Padding(
                 padding: EdgeInsets.all(0),
@@ -700,8 +795,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                       height: double.infinity,
                       child: GoogleMap(
                         mapType: MapType.normal,
-                        myLocationEnabled : true,
-                        // 이거 마커 추가 하려면 하면 됨
+                        myLocationEnabled : false,
                         polylines: Set<Polyline>.of(polylines.values),
                         markers: Set.from(markers),
                         onMapCreated: (controller) {
@@ -747,11 +841,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                         size: 40.sp,
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Luggage_List_Page())
-                                        );
-                                        // _drawerKey.currentState!.openDrawer();
+                                        _drawerKey.currentState!.openDrawer();
                                       },
                                     ),
                                     GestureDetector(
@@ -815,7 +905,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -919,7 +1008,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
         duration: Duration(milliseconds: 600),
         reverseDuration: Duration(milliseconds: 600),
         type: PageTransitionType.bottomToTopJoined,
-        child: SearchingPage(startPlace: startPlace, goalPlace: ""),
+        child: SearchingPage(startPlace: startPlace, goalPlace: "", detailStartAddress: detailStartAddress, detailGoalAddress: detailGoalAddress,),
         childCurrent: MainScreen_Traveler(),
       ),
     );

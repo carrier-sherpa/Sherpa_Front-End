@@ -17,11 +17,8 @@ import '../provider/luggagesetting_provider.dart';
 class Order_Info_page extends StatefulWidget {
   String str = '';
   String luggageId = '';
-  Order_Info_page({
-    Key? key,
-    required this.str,
-    required this.luggageId
-  }) : super(key: key);
+  Order_Info_page({Key? key, required this.str, required this.luggageId})
+      : super(key: key);
 
   @override
   State<Order_Info_page> createState() => _Order_Info_pageState(luggageId);
@@ -41,6 +38,8 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   int bigLuggageNum = 0;
   String startPlace = "";
   String goalPlace = "";
+  String detailStartAddress='';
+  String detailGoalAddress='';
 
   _Order_Info_pageState(this.luggageId);
 
@@ -53,7 +52,6 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
   bool _buttonVisiblity = true;
   String _buttonMsg = '';
-
   @override
   void initState() {
     super.initState();
@@ -72,23 +70,11 @@ class _Order_Info_pageState extends State<Order_Info_page> {
         child: Center(
           child: Column(
             children: [
-
               Container(
                 width: double.infinity,
                 child: Center(
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 16.h,
-                      ),
-                      Container(
-                        width: 64.w,
-                        height: 4.h,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(90),
-                        ),
-                      ),
                       SizedBox(
                         height: 16.h,
                       ),
@@ -180,8 +166,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                 ),
                               ),
                             ),
-                            onTap: () {
-                            },
+                            onTap: () {},
                           ),
                         ],
                       ),
@@ -230,7 +215,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                 children: [
                                   Container(
                                     margin:
-                                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: SherpaColor.sherpa_sub,
@@ -252,8 +237,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                         style: TextStyle(fontSize: 10.sp),
                                       ),
                                       trailing: Icon(Icons.navigate_next),
-                                      onTap: () {
-                                      },
+                                      onTap: () {},
                                       textColor: Colors.white,
                                       iconColor: Colors.white,
                                     ),
@@ -263,7 +247,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                   ),
                                   Container(
                                     margin:
-                                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: SherpaColor.sherpa_main,
@@ -285,8 +269,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                         style: TextStyle(fontSize: 10.sp),
                                       ),
                                       trailing: Icon(Icons.navigate_next),
-                                      onTap: () {
-                                      },
+                                      onTap: () {},
                                       textColor: Colors.white,
                                       iconColor: Colors.white,
                                     ),
@@ -296,7 +279,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                   ),
                                   Container(
                                     margin:
-                                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: SherpaColor.sherpa_red,
@@ -318,8 +301,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                         style: TextStyle(fontSize: 10.sp),
                                       ),
                                       trailing: Icon(Icons.navigate_next),
-                                      onTap: () {
-                                      },
+                                      onTap: () {},
                                       textColor: Colors.white,
                                       iconColor: Colors.white,
                                     ),
@@ -374,7 +356,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                 children: [
                                   Container(
                                     margin:
-                                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: SherpaColor.sherpa_sub,
@@ -404,7 +386,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                   ),
                                   Container(
                                     margin:
-                                    EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
+                                        EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: SherpaColor.sherpa_red,
@@ -446,7 +428,9 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                       Container(
                         child: Row(
                           children: [
-                            SizedBox(width: 16.w,),
+                            SizedBox(
+                              width: 16.w,
+                            ),
                             Text(
                               '총 금액: ',
                               style: TextStyle(
@@ -475,11 +459,9 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
                             SizedBox(
                               width: 50.w,
                             ),
-
                             GestureDetector(
                               child: Container(
                                 alignment: Alignment.center,
@@ -520,7 +502,6 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                                 }
                               },
                             ),
-
                           ],
                         ),
                       ),
@@ -541,7 +522,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
 
-  void drawPolyline () async {
+  void drawPolyline() async {
     List<LatLng> polylineCoordinates = [];
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       Api.KEY,
@@ -573,19 +554,17 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   }
 
   _setOrderInfo() async {
-
-
     final uri = Uri.parse("${Api.ROOTURL}/orders/orderId/$luggageId");
 
     http.Response response = await http.get(
       uri,
-      headers: <String, String> {
+      headers: <String, String>{
         'Content-Type': 'application/json',
-        'Cookie' : '${Api.JSESSIONID}'
+        'Cookie': '${Api.JSESSIONID}'
       },
     );
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       var info = jsonDecode(response.body);
 
       startTime = info['startTime'];
@@ -602,13 +581,10 @@ class _Order_Info_pageState extends State<Order_Info_page> {
       addMarker(startPlaceLatLng, "startPlace", true);
       addMarker(goalPlaceLatLng, "goalPlace", false);
 
-      setState(() {
-
-      });
+      setState(() {});
       // addMarker(latLng, id)
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -619,9 +595,9 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
   _setLuggageInfo(dynamic luggages) {
     luggages.forEach((luggage) {
-      if(luggage['size'] == 'BIG'){
+      if (luggage['size'] == 'BIG') {
         bigLuggageNum = luggage['number'];
-      } else if(luggage['size'] == 'MEDIUM'){
+      } else if (luggage['size'] == 'MEDIUM') {
         middleLuggageNum = luggage['number'];
       } else {
         smallLuggageNum = luggage['number'];
@@ -631,42 +607,43 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
   Future<dynamic> findOrderById(id) async {
     final uri = Uri.parse("${Api.ROOTURL}/orders/orderId/$id");
-    List<String> luggage = ["",""];
+    List<String> luggage = ["", ""];
 
     http.Response response = await http.get(
       uri,
-      headers: <String, String> {
+      headers: <String, String>{
         'Content-Type': 'application/json',
-        'Cookie' : '${Api.JSESSIONID}'
+        'Cookie': '${Api.JSESSIONID}'
       },
     );
 
-
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       var info = jsonDecode(response.body);
 
-      String startAddress = await _getCurGeoCodeByLatLng(info['start']['lat'], info['start']['lng']);
+      String startAddress = await _getCurGeoCodeByLatLng(
+          info['start']['lat'], info['start']['lng']);
       luggage[0] = startAddress;
 
-      String endAddress = await _getCurGeoCodeByLatLng(info['end']['lat'], info['end']['lng']);
+      String endAddress =
+          await _getCurGeoCodeByLatLng(info['end']['lat'], info['end']['lng']);
       luggage[1] = endAddress;
       // 성공
       // addMarker(latLng, id)
       return luggage;
-    }
-    else {
+    } else {
       return luggage;
     }
   }
 
   Future<String> _getCurGeoCodeByLatLng(lat, lng) async {
-    final str = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${lat},${lng}&key=${Api.KEY}';
+    final str =
+        'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${lat},${lng}&key=${Api.KEY}';
     final url = Uri.parse(str);
     String address = startPlace;
 
     http.Response response = await http.get(
       url,
-      headers: <String, String> {
+      headers: <String, String>{
         'Content-Type': 'application/json',
       },
     );
@@ -676,10 +653,9 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
     address = info['results'][0]["formatted_address"];
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       return address;
-    }
-    else {
+    } else {
       return address;
     }
     // return "";
@@ -702,19 +678,16 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   // }
 
   addMarker(latLng, id, start) {
-
     setState(() {
-      markers.add(
-          Marker(
-            position: latLng,
-            markerId: MarkerId(id.toString()),
-            onTap: () {
-              print("마커가 클릭됨");
-            },
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                (start) ? BitmapDescriptor.hueRed : BitmapDescriptor.hueBlue
-            ),
-          ));
+      markers.add(Marker(
+        position: latLng,
+        markerId: MarkerId(id.toString()),
+        onTap: () {
+          print("마커가 클릭됨");
+        },
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+            (start) ? BitmapDescriptor.hueRed : BitmapDescriptor.hueBlue),
+      ));
     });
   }
 
@@ -723,13 +696,13 @@ class _Order_Info_pageState extends State<Order_Info_page> {
 
     http.Response response = await http.post(
       uri,
-      headers: <String, String> {
+      headers: <String, String>{
         'Content-Type': 'application/json',
-        'Cookie' : '${Api.JSESSIONID}'
+        'Cookie': '${Api.JSESSIONID}'
       },
     );
 
-    if(response.statusCode != 200) {
+    if (response.statusCode != 200) {
       print('짐 수락 실패..');
     }
   }
@@ -737,6 +710,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   void showReportForm() {
     final List<String> _valueList = ['도난', '분실'];
     String _selectedValue = '도난';
+
 
     showDialog(
         context: context,
@@ -771,8 +745,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                       _selectedValue = value!;
                       setState(() {
                       });
-                    }
-                ),
+                    }),
                 const SizedBox(
                   height: 200,
                   child: TextField(
@@ -861,7 +834,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
         duration: Duration(milliseconds: 600),
         reverseDuration: Duration(milliseconds: 600),
         type: PageTransitionType.bottomToTopJoined,
-        child: SearchingPage(startPlace: startPlace, goalPlace: ""),
+        child: SearchingPage(startPlace: startPlace, goalPlace: "",detailStartAddress: detailStartAddress, detailGoalAddress: detailGoalAddress,),
       ),
     );
 

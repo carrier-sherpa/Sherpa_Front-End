@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LuggageSettingProvider with ChangeNotifier{
   int _small_luggage_num=0;
@@ -11,6 +10,10 @@ class LuggageSettingProvider with ChangeNotifier{
   int _big_luggage_num=0;
   int get big_luggage_num => _big_luggage_num;
 
+  String detailStartAddress ='출발 세부 주소';
+  String detailGoalAddress = '도착 세부 주소';
+  String detailDeliveryStartAddress ='출발 세부 주소';
+  String detailDeliveryGoalAddress = '도착 세부 주소';
 
   String _luggage_size = '소';
   String get luggage_size => _luggage_size;

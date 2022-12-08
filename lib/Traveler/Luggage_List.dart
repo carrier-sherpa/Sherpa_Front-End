@@ -49,7 +49,6 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
             padding: EdgeInsets.all(8.0),
             shrinkWrap: true,
             children: [
-
               SizedBox(
                 height: 8.h,
               ),
