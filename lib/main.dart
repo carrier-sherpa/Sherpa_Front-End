@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<ReservationTimeSettingProvider>(create: (_) => ReservationTimeSettingProvider()),
         ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: '셰르파',
         home: AnimatedSplashScreen(
           splash: Image.asset('assets/images/Sherpa_MainColor.png',

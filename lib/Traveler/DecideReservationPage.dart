@@ -46,7 +46,7 @@ class _DecideReservationPageState extends State<DecideReservationPage> {
           child: Container(
             child: Column(
               children: [
-
+                Text("예약되었습니다")
                 // 선택 사항 확인하는 페이지
 
               ],
