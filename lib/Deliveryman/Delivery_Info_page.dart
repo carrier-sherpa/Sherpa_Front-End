@@ -26,6 +26,10 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
   String startTime = '';
   String endTime = '';
 
+  int smallLuggageNum = 0;
+  int middleLuggageNum = 0;
+  int bigLuggageNum = 0;
+
   late GoogleMapController _controller;
   String luggageId = '';
 
@@ -42,7 +46,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
   @override
   void initState() {
     super.initState();
-    _setLuggageInfo();
+    _setOrderInfo();
   }
 
   @override
@@ -82,13 +86,13 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('출발: ' + '$endTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('출발: ' + '$startTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                         fontSize: 32.sp,
                         color: Colors.red,
                     ),
                   ),
-                  Text('도착: ' + '$startTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('도착: ' + '$endTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                         fontSize: 32.sp,
                       color: Colors.blue,
@@ -103,17 +107,17 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('소: ' + '0개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('소: ' + '${smallLuggageNum}개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
                   ),
-                  Text('중: ' + '1개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('중: ' + '${middleLuggageNum}개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
                   ),
-                  Text('대: ' + '1개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('대: ' + '${bigLuggageNum}개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
@@ -126,7 +130,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('총액: ' + '0원', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('총액: ' + '${smallLuggageNum * 3000 + middleLuggageNum * 4000 + bigLuggageNum * 5000}원', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
@@ -269,7 +273,7 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
     setState(() {});
   }
 
-  _setLuggageInfo() async {
+  _setOrderInfo() async {
 
 
     final uri = Uri.parse("${Api.ROOTURL}/orders/orderId/$luggageId");
@@ -285,10 +289,12 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
     if(response.statusCode == 200) {
       var info = jsonDecode(response.body);
 
-      startTime = jsonDecode(response.body)['startTime'];
-      endTime = jsonDecode(response.body)['endTime'];
-      startPlaceLatLng = getLatLng(jsonDecode(response.body)['start']);
-      goalPlaceLatLng = getLatLng(jsonDecode(response.body)['end']);
+      startTime = info['startTime'];
+      endTime = info['endTime'];
+      startPlaceLatLng = getLatLng(info['start']);
+      goalPlaceLatLng = getLatLng(info['end']);
+      _setLuggageInfo(info['luggages']);
+
       drawPolyline();
       addMarker(startPlaceLatLng, "startPlace", true);
       addMarker(goalPlaceLatLng, "goalPlace", false);
@@ -357,5 +363,16 @@ class _Delivery_Info_pageState extends State<Delivery_Info_page> {
     }
   }
 
+  _setLuggageInfo(dynamic luggages) {
+    luggages.forEach((luggage) {
+      if(luggage['size'] == 'BIG'){
+        bigLuggageNum = luggage['number'];
+      } else if(luggage['size'] == 'MEDIUM'){
+        middleLuggageNum = luggage['number'];
+      } else {
+        smallLuggageNum = luggage['number'];
+      }
+    });
+  }
 
 }
