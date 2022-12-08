@@ -940,6 +940,8 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
       url,
       headers: <String, String> {
         'Content-Type': 'application/json',
+        'Cookie' : '${Api.JSESSIONID}'
+
       },
     );
     var info = jsonDecode(response.body);
@@ -966,6 +968,8 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
       url,
       headers: <String, String> {
         'Content-Type': 'application/json',
+        'Cookie' : '${Api.JSESSIONID}'
+
       },
     );
     var info = jsonDecode(response.body);
