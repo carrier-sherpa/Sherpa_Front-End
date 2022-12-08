@@ -10,19 +10,19 @@ import 'package:http/http.dart' as http;
 import 'package:sherpa/key.dart';
 
 
-class SearchingPage extends StatefulWidget {
-  const SearchingPage({Key? key, required this.startPlace, required this. goalPlace}) : super(key: key);
+class TravelerSearchingPage extends StatefulWidget {
+  const TravelerSearchingPage({Key? key, required this.startPlace, required this. goalPlace}) : super(key: key);
   final startPlace;
   final goalPlace;
 
   @override
-  State<SearchingPage> createState() => _SearchingPageState();
+  State<TravelerSearchingPage> createState() => _TravelerSearchingPageState();
 }
 
-class _SearchingPageState extends State<SearchingPage> {
+class _TravelerSearchingPageState extends State<TravelerSearchingPage> {
   List<String> listTexts = ["","","","",""];
   List<String> placeIdTexts = ["","","","",""];
-  List<String> places = ["",""];
+  List<String> places = ["","", "", ""];
   List<String> placeIds = ["",""];
   String startPlaceId = "";
   String goalPlaceId = "";
@@ -30,6 +30,9 @@ class _SearchingPageState extends State<SearchingPage> {
 
   TextEditingController startTextController = TextEditingController();
   TextEditingController goalTextController = TextEditingController();
+
+  TextEditingController startDetailsController = TextEditingController();
+  TextEditingController goalDetailsController = TextEditingController();
 
   void initText() {
     // setState(() {
@@ -51,7 +54,7 @@ class _SearchingPageState extends State<SearchingPage> {
         children: [
           Container(
             width: double.infinity,
-            height: 300.h,
+            height: 400.h,
             child: Center(
               child: Column(
                 children: [
@@ -91,6 +94,9 @@ class _SearchingPageState extends State<SearchingPage> {
                           onTap: () async {
                             places[0] = startTextController.text.toString();
                             places[1] = goalTextController.text.toString();
+                            places[2] = startDetailsController.text.toString();
+                            places[3] = goalDetailsController.text.toString();
+
                             dynamic placeInfo = [places, await getPlaceLatLng(placeIds)];
                             Navigator.pop(context, placeInfo);
                           },
@@ -138,7 +144,7 @@ class _SearchingPageState extends State<SearchingPage> {
                       GestureDetector(
                         child: Container(
                           height: 30.h,
-                          width: 350.w,
+                          width: 300.w,
                           alignment: Alignment.center,
 
                           //color: Colors.amber,
@@ -164,19 +170,45 @@ class _SearchingPageState extends State<SearchingPage> {
                             ),
                           ),
                         ),
-                        // onTap: () {
-                        //   Navigator.push(
-                        //     context,
-                        //     PageTransition(
-                        //       curve: Curves.easeInOut,
-                        //       duration: Duration(milliseconds: 600),
-                        //       reverseDuration: Duration(milliseconds: 600),
-                        //       type: PageTransitionType.bottomToTopJoined,
-                        //       child: SearchingPage(),
-                        //       childCurrent: MainScreen_Traveler(),
-                        //     ),
-                        //   );
-                        // },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 55.w),
+                      GestureDetector(
+                        child: Container(
+                          height: 30.h,
+                          width: 300.w,
+                          alignment: Alignment.center,
+
+                          //color: Colors.amber,
+                          child: Flexible(
+                            child: TextField(
+                              controller: startDetailsController,
+                              decoration: InputDecoration(
+                                hintText: '상세주소',
+                              ),
+                              // '현위치: 근처 가게명 가져오기',
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                              ),
+                              onChanged: (input) {
+                                // curStartInput = true;
+                                // _getAutocompletePlaces(startTextController.text.toString());
+                              },
+
+                              onTap: (){
+                                curStartInput = true;
+                              },
+
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -213,7 +245,7 @@ class _SearchingPageState extends State<SearchingPage> {
                       GestureDetector(
                         child: Container(
                             height: 30.h,
-                            width: 350.w,
+                            width: 300.w,
                             alignment: Alignment.center,
                             //color: Colors.amber,
                             child: Flexible(
@@ -231,33 +263,40 @@ class _SearchingPageState extends State<SearchingPage> {
                                 },
                               ),
                             )
-
-
-                          // child:new Flexible(
-                          //   child: new TextField(
-                          //     // decoration: const InputDecoration(helperText: "어디로 짐을 보내실건가요"),
-                          //     style: TextStyle(
-                          //       fontSize: 20.sp,
-                          //     ),
-                          //     onChanged: (input){
-                          //       _getAutocompletePlaces(input);
-                          //     },
-                          //   ),
-                          // ),
                         ),
-                        // onTap: () {
-                        //   Navigator.push(
-                        //     context,
-                        //     PageTransition(
-                        //       curve: Curves.easeInOut,
-                        //       duration: Duration(milliseconds: 600),
-                        //       reverseDuration: Duration(milliseconds: 600),
-                        //       type: PageTransitionType.bottomToTopJoined,
-                        //       child: SearchingPage(),
-                        //       childCurrent: MainScreen_Traveler(),
-                        //     ),
-                        //   );
-                        // },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget> [
+                      SizedBox(width: 55.w),
+
+                      GestureDetector(
+                        child: Container(
+                            height: 30.h,
+                            width: 300.w,
+                            alignment: Alignment.center,
+                            //color: Colors.amber,
+                            child: Flexible(
+                              child: TextField(
+                                controller: goalDetailsController,
+                                decoration: InputDecoration(
+                                  hintText: '상세주소',
+                                ),
+                                onChanged: (input) {
+                                  // _getAutocompletePlaces(input);
+                                  // goalTextController.text();
+                                },
+                                onTap: () {
+                                  curStartInput = false;
+                                },
+                              ),
+                            )
+                        ),
                       ),
                     ],
                   ),
@@ -484,4 +523,5 @@ class _SearchingPageState extends State<SearchingPage> {
 
     return locationsInfo;
   }
+
 }

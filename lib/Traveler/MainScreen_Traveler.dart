@@ -3,6 +3,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sherpa/UI/Login_Page.dart';
 import 'package:sherpa/UI/Searching_Page.dart';
+import 'package:sherpa/UI/Traveler_Searching_Page.dart';
 import 'package:sherpa/UI/style.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -59,6 +60,9 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   bool startTerminal = false;
 
   String orderCafeId = "";
+
+  String startDetails = "";
+  String goalDetails = "";
 
   @override
   Widget build(BuildContext context) {
@@ -172,25 +176,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
 
                   child: Column(
                     children: [
-                      // 이게 내가 추가한 부분(호ㅏ면이 깨져서 주석 처리)
-                      // FloatingActionButton(
-                      //   onPressed: () async {
-                      //     LocationPermission permission = await Geolocator.requestPermission();
-                      //     var gps = await getCurrentLocation();
-                      //     // afterBuild();
-                      //     // var temp = await _getAllLuggage();
-                      //     // var value = await _getCurGeoCode(gps);
-                      //     // addMarker(LatLng(gps.latitude, gps.longitude), "myLocation");
-                      //     _controller.animateCamera(
-                      //         CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
-                      //
-                      //   },
-                      //   child: Icon(
-                      //     Icons.my_location,
-                      //     color: Colors.black,
-                      //   ),
-                      //   backgroundColor: Colors.white,
-                      // ),
                       SizedBox(
                         height: 16.h,
                       ),
@@ -237,7 +222,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                             ),
                           ),
                           SizedBox(
-                            height: 16.h,
+                            height: 8.h,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -258,7 +243,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                             ],
                           ),
                           SizedBox(
-                            height: 32.h,
+                            height: 16.h,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -286,8 +271,29 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                               ),
                             ],
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(width: 55.w),
+                              GestureDetector(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  //color: Colors.amber,
+                                  child: Text(
+                                    '${startDetails}',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  _navigateAndDisplaySelection(context);
+                                },
+                              ),
+                            ],
+                          ),
                           SizedBox(
-                            height: 20.h,
+                            height: 10.h,
                           ),
                           Container(
                             height: 1.h,
@@ -321,6 +327,28 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                   //color: Colors.amber,
                                   child: Text(
                                     '${goalPlace}',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  _navigateAndDisplaySelection(context);
+                                },
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(width: 55.w),
+                              GestureDetector(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  //color: Colors.amber,
+                                  child: Text(
+                                    '${goalDetails}',
                                     style: TextStyle(
                                       fontSize: 15.sp,
                                       color: Colors.grey,
@@ -491,7 +519,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                             color: Colors.black12,
                           ),
                           SizedBox(
-                            height: 12.h,
+                            height: 4.h,
                           ),
 
                           // 시간 설정 버튼, 문구, 선택된 화면을 포함하는 Container
@@ -514,9 +542,6 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                     ],
                                     // 문구 Row 끝
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 4.h,
                                 ),
                                 Container(
                                   width: double.infinity,
@@ -919,13 +944,15 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
         duration: Duration(milliseconds: 600),
         reverseDuration: Duration(milliseconds: 600),
         type: PageTransitionType.bottomToTopJoined,
-        child: SearchingPage(startPlace: startPlace, goalPlace: ""),
+        child: TravelerSearchingPage(startPlace: startPlace, goalPlace: ""),
         childCurrent: MainScreen_Traveler(),
       ),
     );
 
     startPlaceLatLng = new LatLng(result[1][0][0], result[1][0][1]);
     goalPlaceLatLng = new LatLng(result[1][1][0], result[1][1][1]);
+    // startDetails = result[1][1][1];
+    // goalDetails = result[1][1][1];
 
     await checkTerminal(startPlaceLatLng, goalPlaceLatLng);
     
@@ -940,6 +967,8 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
     setState(() {
       startPlace = result[0][0];
       goalPlace = result[0][1];
+      startDetails = result[0][2];
+      goalDetails = result[0][3];
     });
 
     drawPolyline();
@@ -1129,8 +1158,9 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             "hour" :  "13",
             "minute" : "12"
           },
-          "cafeId" : orderCafeId
-          ,
+          // "cafeId" : orderCafeId,
+          "start_detail" : startDetails,
+          "end_detail" : goalDetails,
           "luggages" : [
             {
               "size" : "SMALL",
