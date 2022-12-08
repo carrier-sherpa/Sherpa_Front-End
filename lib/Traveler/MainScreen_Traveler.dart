@@ -56,6 +56,10 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
 
+  bool startTerminal = false;
+
+  String orderCafeId = "";
+
   @override
   Widget build(BuildContext context) {
     // WidgetsBinding.instance!.addPostFrameCallback((_) => afterBuild);
@@ -842,6 +846,8 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
       url,
       headers: <String, String> {
         'Content-Type': 'application/json',
+        'Cookie' : '${Api.JSESSIONID}'
+
       },
     );
 
@@ -920,6 +926,13 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
 
     startPlaceLatLng = new LatLng(result[1][0][0], result[1][0][1]);
     goalPlaceLatLng = new LatLng(result[1][1][0], result[1][1][1]);
+
+    await checkTerminal(startPlaceLatLng, goalPlaceLatLng);
+    
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: goalPlaceLatLng, zoom: 14)
+      //17 is new zoom level
+    ));
 
     // addMarker(startPlaceLatLng, "startPlace");
     addMarker(goalPlaceLatLng, "goalPlace");
@@ -1116,6 +1129,8 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
             "hour" :  "13",
             "minute" : "12"
           },
+          "cafeId" : orderCafeId
+          ,
           "luggages" : [
             {
               "size" : "SMALL",
@@ -1136,5 +1151,185 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
     if(info["status"] == "ACCEPT"){
       //성공
     }
+  }
+
+  checkTerminal(LatLng startPlace, LatLng goalPlace) async {
+    final uri = Uri.parse("${Api.ROOTURL}/orders/isAddress").replace(queryParameters: {
+      'startLat': '${startPlace.latitude}',
+      'startLng': '${startPlace.longitude}',
+      'endLat': '${goalPlace.latitude}',
+      'endLng': '${goalPlace.longitude}',
+    });
+
+    http.Response response = await http.get(
+      uri,
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cookie' : '${Api.JSESSIONID}'
+      },
+    );
+
+    if(response.statusCode == 200) {
+      if (response.body == "none") {
+        return;
+      }
+      if(response.body == "start"){
+        startTerminal = true;
+        addStartMarketMarker(startPlace);
+      } else if(response.body == "end"){
+        addStartMarketMarker(goalPlace);
+
+        // startTerminal = false;
+      }
+
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  addStartMarketMarker(latLng) {
+    confirmAddMarketMarker();
+
+    addProperMarketMarkers();
+
+
+  }
+
+  confirmAddMarketMarker() {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Text("터미널 근처이시면 \n 근처의 카페를 찾아드릴까요?"),
+              ],
+            ),
+            //
+            actions: <Widget>[
+              new TextButton(
+                child: new Text("네"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              new TextButton(
+                child: new Text("아니요"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void addProperMarketMarkers() {
+    if (startTerminal) {
+      findMarketMarkers(startPlaceLatLng);
+    } else {
+      findMarketMarkers(goalPlaceLatLng);
+    }
+
+    setState(() {
+      // markers
+      //     .add(Marker(position: latLng, markerId: MarkerId(id.toString()), onTap: () {
+        // goalPlace = ""
+      // },));
+    });
+  }
+
+  findMarketMarkers(LatLng latLng) async {
+    final uri = Uri.parse("${Api.ROOTURL}/cafe").replace(queryParameters: {
+      'lat': '${latLng.latitude}',
+      'lng': '${latLng.longitude}',
+    });
+
+    http.Response response = await http.get(
+      uri,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+        'Cookie' : '${Api.JSESSIONID}'
+      },
+    );
+
+    if(response.statusCode == 200) {
+      var info = jsonDecode(utf8.decode(response.bodyBytes));
+
+      info.forEach((cafe) => {
+        addMarketMarkers(LatLng(cafe["address"]["lat"], cafe["address"]["lng"]), cafe["id"], cafe["name"])
+      });
+
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  addMarketMarkers(LatLng latLng, String cafeId, String cafeName) {
+    setState(() {
+      markers
+          .add(Marker(position: latLng, markerId: MarkerId(cafeId.toString()), onTap: () {
+            orderCafeId = cafeId.toString();
+            if(startTerminal){
+              startPlaceLatLng = latLng;
+              startPlace = cafeName;
+              setState(() {});
+              confirmCafeToPlace(cafeName, 1);
+            } else {
+              goalPlaceLatLng = latLng;
+              goalPlace = cafeName;
+              setState(() {});
+              confirmCafeToPlace(cafeName, 1);
+            }
+      },));
+    });
+  }
+
+  confirmCafeToPlace(String cafeName, int restNum) {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Text("$cafeName으로 목적지를 설정할까요?"),
+              ],
+            ),
+
+            content: Text('아직 $restNum개 더 맡길 수 있어요'),
+
+              //
+            actions: <Widget>[
+              new TextButton(
+                child: new Text("네"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              new TextButton(
+                child: new Text("아니요"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }
