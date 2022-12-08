@@ -735,8 +735,8 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   }
 
   void showReportForm() {
-    final List<String> _valueList = ['신고타입', '도난', '분실'];
-    String? _selectedValue = '신고타입';
+    final List<String> _valueList = ['도난', '분실'];
+    String _selectedValue = '도난';
 
     showDialog(
         context: context,
@@ -768,8 +768,8 @@ class _Order_Info_pageState extends State<Order_Info_page> {
                       );
                     }).toList(),
                     onChanged: (String? value) {
+                      _selectedValue = value!;
                       setState(() {
-                        _selectedValue = value!;
                       });
                     }
                 ),
@@ -827,7 +827,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   }
 
   bool _isArrive() {
-    if (_buttonMsg == "ARRIVE") {
+    if (_buttonMsg == "신고하기") {
       return true;
     }
 
@@ -835,7 +835,7 @@ class _Order_Info_pageState extends State<Order_Info_page> {
   }
 
   bool _isRegister() {
-    if (_buttonMsg == "REGISTER") {
+    if (_buttonMsg == "수정하기") {
       return true;
     }
 

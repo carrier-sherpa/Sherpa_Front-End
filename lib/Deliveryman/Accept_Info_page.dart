@@ -29,6 +29,10 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
   late GoogleMapController _controller;
   String luggageId = '';
 
+  int smallLuggageNum = 0;
+  int middleLuggageNum = 0;
+  int bigLuggageNum = 0;
+
   _Accept_Info_pageState(this.luggageId);
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -42,7 +46,7 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
   @override
   void initState() {
     super.initState();
-    _setLuggageInfo();
+    _setOrderInfo();
   }
 
   @override
@@ -102,17 +106,17 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('소: ' + '0개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('소: ' + '${smallLuggageNum}개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
                   ),
-                  Text('중: ' + '1개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('중: ' + '${middleLuggageNum}개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
                   ),
-                  Text('대: ' + '1개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('대: ' + '${bigLuggageNum}개', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
@@ -125,7 +129,7 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('총액: ' + '0원', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('총액: ' + '${smallLuggageNum * 3000 + middleLuggageNum * 4000 + bigLuggageNum * 5000}원', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
                       fontSize: 20.sp,
                     ),
@@ -269,7 +273,7 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
     setState(() {});
   }
 
-  _setLuggageInfo() async {
+  _setOrderInfo() async {
 
 
     final uri = Uri.parse("${Api.ROOTURL}/orders/orderId/$luggageId");
@@ -289,6 +293,8 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
       endTime = jsonDecode(response.body)['endTime'];
       startPlaceLatLng = getLatLng(jsonDecode(response.body)['start']);
       goalPlaceLatLng = getLatLng(jsonDecode(response.body)['end']);
+      _setLuggageInfo(info['luggages']);
+
       drawPolyline();
       addMarker(startPlaceLatLng, "startPlace", true);
       addMarker(goalPlaceLatLng, "goalPlace", false);
@@ -371,6 +377,18 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
     if(response.statusCode != 200) {
       print('짐 수락 실패..');
     }
+  }
+
+  _setLuggageInfo(dynamic luggages) {
+    luggages.forEach((luggage) {
+      if(luggage['size'] == 'BIG'){
+        bigLuggageNum = luggage['number'];
+      } else if(luggage['size'] == 'MEDIUM'){
+        middleLuggageNum = luggage['number'];
+      } else {
+        smallLuggageNum = luggage['number'];
+      }
+    });
   }
 
 
