@@ -138,7 +138,7 @@ class _SearchingPageState extends State<SearchingPage> {
                       GestureDetector(
                         child: Container(
                           height: 30.h,
-                          width: 350.w,
+                          width: 300.w,
                           alignment: Alignment.center,
 
                           //color: Colors.amber,
@@ -185,7 +185,7 @@ class _SearchingPageState extends State<SearchingPage> {
                   ),
                   Container(
                     height: 1.h,
-                    width: 350.w,
+                    width: 300.w,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: FractionalOffset(0.0, 0.0),

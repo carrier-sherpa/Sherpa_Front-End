@@ -25,6 +25,10 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
 
   String startTime = '';
   String endTime = '';
+  String startDetails = "";
+  String endDetails = "";
+  String startAddress = "";
+  String goalAddress = "";
 
   late GoogleMapController _controller;
   String luggageId = '';
@@ -62,7 +66,7 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
             children: [
               Container(
                 width: 320.w,
-                height: 480.h,
+                height: 380.h,
                 color: Colors.blue,
                 child: GoogleMap(
                   mapType: MapType.normal,
@@ -86,16 +90,68 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('출발: ' + '$endTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text('출발: ', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
-                      fontSize: 32.sp,
+                      fontSize: 25.sp,
                       color: Colors.red,
                     ),
                   ),
-                  Text('도착: ' + '$startTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                  Text(startAddress, //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
                     style: TextStyle(
-                      fontSize: 32.sp,
+                      fontSize: 15.sp,
+                      // color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(startDetails, //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      // color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('도착: ', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                    style: TextStyle(
+                      fontSize: 25.sp,
                       color: Colors.blue,
+                    ),
+                  ),
+                  Text(goalAddress, //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      // color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text( endDetails, //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      // color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('제한시간: ' + '$endTime', //TODO 12시 대신에 이용객이 설정한 데이터 들어가야합니다.
+                    style: TextStyle(
+                      fontSize: 20.sp,
                     ),
                   ),
                 ],
@@ -287,13 +343,22 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
     );
 
     if(response.statusCode == 200) {
-      var info = jsonDecode(response.body);
+      var info = jsonDecode(utf8.decode(response.bodyBytes));
+
 
       startTime = jsonDecode(response.body)['startTime'];
       endTime = jsonDecode(response.body)['endTime'];
       startPlaceLatLng = getLatLng(jsonDecode(response.body)['start']);
       goalPlaceLatLng = getLatLng(jsonDecode(response.body)['end']);
       _setLuggageInfo(info['luggages']);
+
+      startDetails = info['start_detail'];
+      endDetails = info['end_detail'];
+
+      startAddress = await _getCurGeoCodeByLatLng(startPlaceLatLng.latitude, startPlaceLatLng.longitude);
+
+      goalAddress = await _getCurGeoCodeByLatLng(goalPlaceLatLng.latitude, goalPlaceLatLng.longitude);
+
 
       drawPolyline();
       addMarker(startPlaceLatLng, "startPlace", true);
@@ -392,4 +457,34 @@ class _Accept_Info_pageState extends State<Accept_Info_page> {
   }
 
 
+
+  Future<String> _getCurGeoCodeByLatLng(lat, lng) async {
+    final str = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&language=ko&latlng=${lat},${lng}&key=${Api.KEY}';
+    final url = Uri.parse(str);
+    String address = "";
+
+    http.Response response = await http.get(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+        'Cookie' : '${Api.JSESSIONID}'
+
+      },
+    );
+    var info = jsonDecode(utf8.decode(response.bodyBytes));
+
+    print("주소는" + info['results'][0]["formatted_address"]);
+    print("placeId" + info['results'][0]['place_id']);
+
+    address = info['results'][0]["formatted_address"];
+
+    if(response.statusCode == 200) {
+      return address;
+    }
+    else {
+      return address;
+    }
+    // return "";
+
+  }
 }

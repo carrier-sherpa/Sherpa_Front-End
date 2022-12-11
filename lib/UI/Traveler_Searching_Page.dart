@@ -328,7 +328,7 @@ class _TravelerSearchingPageState extends State<TravelerSearchingPage> {
                   padding: const EdgeInsets.all(8),
                   children: <Widget>[
                     Container(
-                      height: 50,
+                      height: 40,
                       color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
@@ -340,7 +340,7 @@ class _TravelerSearchingPageState extends State<TravelerSearchingPage> {
                       ),
                     ),
                     Container(
-                      height: 50,
+                      height: 40,
                       color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
@@ -352,7 +352,7 @@ class _TravelerSearchingPageState extends State<TravelerSearchingPage> {
                       ),
                     ),
                     Container(
-                      height: 50,
+                      height: 40,
                       color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
@@ -364,7 +364,7 @@ class _TravelerSearchingPageState extends State<TravelerSearchingPage> {
                       ),
                     ),
                     Container(
-                      height: 50,
+                      height: 40,
                       color: Colors.white,
                       child: Center(
                           child: new GestureDetector(
@@ -375,18 +375,18 @@ class _TravelerSearchingPageState extends State<TravelerSearchingPage> {
                           )
                       ),
                     ),
-                    Container(
-                      height: 50,
-                      color: Colors.white,
-                      child: Center(
-                          child: new GestureDetector(
-                            onTap: () {
-                              changeLocation(listTexts[4], placeIdTexts[4]);
-                            },
-                            child: new Text('${listTexts[4]}'),
-                          )
-                      ),
-                    ),
+                    // Container(
+                    //   height: 40,
+                    //   color: Colors.white,
+                    //   child: Center(
+                    //       child: new GestureDetector(
+                    //         onTap: () {
+                    //           changeLocation(listTexts[4], placeIdTexts[4]);
+                    //         },
+                    //         child: new Text('${listTexts[4]}'),
+                    //       )
+                    //   ),
+                    // ),
                   ],
 
                 ),

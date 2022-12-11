@@ -64,6 +64,11 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
   String startDetails = "";
   String goalDetails = "";
 
+  String startHour = "10";
+  String startMin = "00";
+  String endHour = "18";
+  String endMin = "00";
+
   @override
   Widget build(BuildContext context) {
     // WidgetsBinding.instance!.addPostFrameCallback((_) => afterBuild);
@@ -573,6 +578,13 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                           onTap: () {
                                             showReservationTimeSetting(context);
                                           },
+
+                                          onLongPress: () {
+                                            // startHour = Provider.of<ReservationTimeSettingProvider>(context).department_hours;
+                                            // startMin = Provider.of<ReservationTimeSettingProvider>(context).department_mins;
+                                            // endHour = Provider.of<ReservationTimeSettingProvider>(context).arrive_hours;
+                                            // endMin = Provider.of<ReservationTimeSettingProvider>(context).arrive_mins;
+                                          },
                                           textColor: Colors.white,
                                           iconColor: Colors.white,
                                         ),
@@ -604,6 +616,12 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                           trailing: Icon(Icons.navigate_next),
                                           onTap: () {
                                             showReservationTimeSetting(context);
+                                          },
+                                          onLongPress: () {
+                                            // startHour = Provider.of<ReservationTimeSettingProvider>(context).department_hours;
+                                            // startMin = Provider.of<ReservationTimeSettingProvider>(context).department_mins;
+                                            // endHour = Provider.of<ReservationTimeSettingProvider>(context).arrive_hours;
+                                            // endMin = Provider.of<ReservationTimeSettingProvider>(context).arrive_mins;
                                           },
                                           textColor: Colors.white,
                                           iconColor: Colors.white,
@@ -691,6 +709,10 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                     int smallNum = Provider.of<LuggageSettingProvider>(context, listen: false).small_luggage_num;
                                     int midNum = Provider.of<LuggageSettingProvider>(context, listen: false).mid_luggage_num;
                                     int bigNum = Provider.of<LuggageSettingProvider>(context, listen: false).big_luggage_num;
+                                    startHour = Provider.of<ReservationTimeSettingProvider>(context,listen: false).department_hours;
+                                    startMin = Provider.of<ReservationTimeSettingProvider>(context,listen: false).department_mins;
+                                    endHour = Provider.of<ReservationTimeSettingProvider>(context,listen: false).arrive_hours;
+                                    endMin = Provider.of<ReservationTimeSettingProvider>(context,listen: false).arrive_mins;
                                     createOrder(smallNum, midNum, bigNum);
                                     // Navigator.push(
                                     //   context,
@@ -792,6 +814,14 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
                                       ),
                                       onTap: () {
                                         _navigateAndDisplaySelection(context);
+                                        // Provider.of<ReservationTimeSettingProvider>(context).department_hours = "00";
+                                        // Provider.of<ReservationTimeSettingProvider>(context).department_mins = "00";
+                                        // Provider.of<ReservationTimeSettingProvider>(context).arrive_hours = "00";
+                                        // Provider.of<ReservationTimeSettingProvider>(context).arrive_mins = "00";
+                                        // // Provider.of<LuggageSettingProvider>(context).small_luggage_num;
+                                        // Provider.of<LuggageSettingProvider>(context).mid_luggage_num = 0;
+                                        // Provider.of<LuggageSettingProvider>(context).big_luggage_num = 0;
+                                        //TODO:
                                       },
                                     ),
                                   ],
@@ -1013,6 +1043,7 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
 
   createOrder (small, mid, big) async {
     if(isValidOrder(small, mid, big)){
+
       await sendOrderToServer(small, mid, big);
       completeOrder();
       // showCompletedOrder();
@@ -1151,12 +1182,12 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
           //     + Provider.of<ReservationTimeSettingProvider>(context).department_mins.padLeft(2, '0') + '분',
           // TODO: 여기 바꿔야대 진짜 시간 넣기로
           "startTime" : {
-            "hour" :  "10",
-            "minute" : "00"
+            "hour" :  startHour,
+            "minute" : startMin
           },
           "endTime" : {
-            "hour" :  "13",
-            "minute" : "12"
+            "hour" :  endHour,
+            "minute" : endMin
           },
           // "cafeId" : orderCafeId,
           "start_detail" : startDetails,
@@ -1314,12 +1345,12 @@ class _MainScreen_TravelerState extends State<MainScreen_Traveler> {
               startPlaceLatLng = latLng;
               startPlace = cafeName;
               setState(() {});
-              confirmCafeToPlace(cafeName, 1);
+              confirmCafeToPlace(cafeName, 4);
             } else {
               goalPlaceLatLng = latLng;
               goalPlace = cafeName;
               setState(() {});
-              confirmCafeToPlace(cafeName, 1);
+              confirmCafeToPlace(cafeName, 4);
             }
       },));
     });
