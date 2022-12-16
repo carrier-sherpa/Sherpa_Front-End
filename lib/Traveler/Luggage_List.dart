@@ -53,7 +53,8 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
                 height: 8.h,
               ),
               Visibility(
-                  child: Container(
+                visible: orderVisibility[0],
+                child: Container(
                     margin:
                     EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
                     decoration: BoxDecoration(
@@ -94,6 +95,7 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
                 height: 8.h,
               ),
               Visibility(
+                visible: orderVisibility[1],
                   child: Container(
                     margin:
                     EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
@@ -135,6 +137,7 @@ class _Luggage_List_PageState extends State<Luggage_List_Page> {
                 height: 8.h,
               ),
               Visibility(
+                visible: orderVisibility[2],
                   child: Container(
                     margin:
                     EdgeInsets.fromLTRB(20.sp, 0, 20.sp, 0),
