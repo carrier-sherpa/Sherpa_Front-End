@@ -130,5 +130,5 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 
 lib/key.dart
-.flutter-plugins-dependencie
+.flutter-plugins-dependencies
 ./lib/key.dart
