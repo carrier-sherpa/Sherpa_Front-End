@@ -267,7 +267,7 @@ class _LoginFormState extends State<LoginForm> {
               ],
             ),
             SizedBox(
-                height: 120.h
+                height: 88.h
             ),
             Container(
               height: 1.h,

@@ -47,13 +47,19 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
   int price_small = 12000;
   int price_mid = 10000;
   int price_big = 5000;
+  TextEditingController _textController = TextEditingController();
   TextEditingController luggageTextController = TextEditingController();
+  TextEditingController _detailDeliveryStartTextController = TextEditingController();
+  TextEditingController _detailDeliveryGoalTextController = TextEditingController();
 
+  String userName = '원동연';
   String startPlace = "";
   String goalPlace = "목적지";
   var luggageName = ["짐1", "짐2", "짐3", "짐4", "짐5", "짐6"];
   var luggageId = ["", "", "", "", "", ""];
   var orderVisibility = [false, false, false, false, false, false];
+  String detailDeliveryStartAddress = '';
+  String detailDeliveryGoalAddress = '';
   LatLng startPlaceLatLng = new LatLng(0, 0);
   LatLng goalPlaceLatLng = new LatLng(0, 0);
 
@@ -74,21 +80,18 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
                 // 현재 계정 이미지 set
-                //backgroundImage: AssetImage('assets/profile.png'), //유저 프로필 사진 넣기
+                backgroundImage: AssetImage('assets/images/profile.png'), //유저 프로필 사진 넣기
                 backgroundColor: Colors.white,
               ),
               otherAccountsPictures: <Widget>[
                 // 다른 계정 이미지[] set
                 CircleAvatar(
                   backgroundColor: Colors.white,
-                  //backgroundImage: AssetImage('사진 추가해야함'), //유저 프로필 사진 추가
+                  backgroundImage: AssetImage('assets/images/delivery.png'), //유저 프로필 사진 추가
                 ),
               ],
-              accountName: Text('유저 이름 넣기'), //유저이름 넣기
-              accountEmail: Text('유저 이메일 주소 넣기'), //유저 이메일 주소 넣기
-              onDetailsPressed: () {
-                print('arrow is clicked');
-              },
+              accountName: Text(userName), //유저이름 넣기
+              accountEmail: Text('wonddang@naver.com'), //유저 이메일 주소 넣기
               decoration: BoxDecoration(
                   color: SherpaColor.sherpa_main,
                   borderRadius: BorderRadius.only(
@@ -97,36 +100,49 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
             ),
             ListTile(
               leading: Icon(
-                Icons.home,
+                Icons.shopping_bag,
                 color: Colors.grey[850],
               ),
-              title: Text('Home'),
+              title: Text('내가 운송할 짐 보기'),
               onTap: () {
-                print('Home is clicked');
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => Delivery_List_Page())
+                );
               },
-              trailing: Icon(Icons.add),
+              trailing: Icon(Icons.arrow_forward_ios),
             ),
             ListTile(
               leading: Icon(
                 Icons.settings,
                 color: Colors.grey[850],
               ),
-              title: Text('Setting'),
+              title: Text('닉네임 변경'),
               onTap: () {
-                print('Setting is clicked');
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('닉네임 변경'),
+                    content: TextField(
+                      controller: _textController,
+                      onSubmitted: (text){
+                        userName = _textController.text;
+                      },
+                    ),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              userName = _textController.text;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('수정 완료')),
+                    ],
+                  ),
+                );
               },
-              trailing: Icon(Icons.add),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.question_answer,
-                color: Colors.grey[850],
-              ),
-              title: Text('Q&A'),
-              onTap: () {
-                print('Q&A is clicked');
-              },
-              trailing: Icon(Icons.add),
+              trailing: Icon(Icons.arrow_forward_ios),
             ),
           ],
         ),
@@ -145,9 +161,9 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
             // ),
 
             SlidingUpPanel(
-              //여행객 설정 화면
+              //운송자 설정 화면
               minHeight: 64.sp,
-              maxHeight: 480.sp,
+              maxHeight: 360.sp,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(24.0),
                 topRight: Radius.circular(24.0),
@@ -236,7 +252,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                                 ),
                               ),
                               SizedBox(
-                                width: 20.w,
+                                width: 48.w,
                               ),
                               GestureDetector(
                                 child: Container(
@@ -311,8 +327,42 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                               ),
                             ],
                           ),
+
                           SizedBox(
-                            height: 20.h,
+                            height: 4.h,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text('세부 주소: '),
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  height: 36.h,
+                                  width: 270.w,
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    child: TextField(
+                                      controller: _detailDeliveryStartTextController,
+                                      decoration: InputDecoration(
+                                        hintText: '출발지의 세부 주소를 입력해주세요',
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                      ),
+                                      onChanged: (text) {
+                                        detailDeliveryStartAddress = _detailDeliveryStartTextController.text;
+                                        Provider.of<LuggageSettingProvider>(context, listen: false).detailDeliveryStartAddress = detailDeliveryStartAddress;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 16.h,
                           ),
                           Container(
                             height: 1.h,
@@ -329,7 +379,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                             ),
                           ),
                           SizedBox(
-                            height: 20.h,
+                            height: 16.h,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -370,8 +420,42 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                             ],
                           ),
                           SizedBox(
-                            height: 24.h,
+                            height: 4.h,
                           ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text('세부 주소: '),
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  height: 36.h,
+                                  width: 270.w,
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    child: TextField(
+                                      controller: _detailDeliveryGoalTextController,
+                                      decoration: InputDecoration(
+                                        hintText: '목적지의 세부 주소를 입력해주세요',
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                      ),
+                                      onChanged: (text) {
+                                        detailDeliveryGoalAddress = _detailDeliveryGoalTextController.text;
+                                        Provider.of<LuggageSettingProvider>(context, listen: false).detailDeliveryGoalAddress = detailDeliveryGoalAddress;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+
                           Container(
                             height: 4.h,
                             width: double.infinity,
@@ -504,9 +588,8 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                       child: GoogleMap(
                         mapType: MapType.normal,
                         polylines: Set<Polyline>.of(polylines.values),
-                        // 이거 마커 추가 하려면 하면 됨
+                        myLocationEnabled : false,
                         markers: Set.from(markers),
-                        myLocationEnabled : true,
                         initialCameraPosition: _kGooglePlex,
                         onMapCreated: (controller) {
                           setState(() {
@@ -550,11 +633,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
                                         size: 40.sp,
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Delivery_List_Page())
-                                        );
-                                        // _drawerKey.currentState!.openDrawer();
+                                        _drawerKey.currentState!.openDrawer();
                                       },
                                     ),
                                     GestureDetector(
@@ -640,7 +719,7 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
         reverseDuration:
         Duration(milliseconds: 100),
         type: PageTransitionType.fade,
-        child: SearchingPage(startPlace: startPlace, goalPlace: ""),
+        child: SearchingPage(startPlace: startPlace, goalPlace: "",detailStartAddress: detailDeliveryStartAddress, detailGoalAddress: detailDeliveryGoalAddress,),
         childCurrent: MainScreen_Deliveryman(),
       ),
     );
@@ -696,7 +775,6 @@ class _MainScreen_DeliverymanState extends State<MainScreen_Deliveryman> {
     polylines[id] = polyline;
     setState(() {});
   }
-
   _drawAllLuggage() async {
 
 
